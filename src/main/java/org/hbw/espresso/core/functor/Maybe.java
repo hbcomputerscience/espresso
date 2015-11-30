@@ -24,6 +24,7 @@ public class Maybe<T> implements Functor<T> {
         return value == null ? "Nothing" : "Just " + value.toString();
     }
     
+    @Override
     public <T2> Maybe<T2> fmap(Function<T,T2> f) {
         return new Maybe(value == null ? value : f.apply(value));
     }
