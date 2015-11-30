@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.hbw.espresso;
 
 import java.io.IOException;
@@ -11,7 +6,7 @@ import java.nio.file.Paths;
 
 /**
  *
- * @author bryan
+ * @author Bryan Eastwood
  */
 public class StaticRoute extends Route {
     
