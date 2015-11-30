@@ -9,7 +9,7 @@ import java.util.function.Function;
  */
 public class Maybe<T> implements Functor<T> {
     
-    private T value;
+    private final T value;
     
     public Maybe(T x) {
         value = x;
