@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package org.hbw.espresso.jetty.logging;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,27 +28,40 @@ public class JettyLogging /* extends AbstractLogger */ {
 	List<OutputStream> loggingList;
 	Boolean debug;
 	String endl;
-	public static JettyLogging instance = null;
-	public static void Initialize(Object... files) throws FileNotFoundException {
+	private static JettyLogging instance = null;
+	public static void Initialize(Object... files) {
 		if (instance == null) {
 			JettyLogging.getInstance().warn("Tried to initalize an already-initialized logger");
 		} else {
 			instance = new JettyLogging(Arrays.asList(files));
 		}
 	}
-	public static JettyLogging getInstance() throws FileNotFoundException {
+	public static JettyLogging getInstance() {
 		if (instance == null) {
 			JettyLogging.Initialize(System.out);
 			JettyLogging.getInstance().warn("Tried to get instance without an initialized instance. Automatically creating one that logs to system.out");
 		}
 		return instance;
 	}
-	private JettyLogging(List<Object> filesList) throws FileNotFoundException {
+	private JettyLogging(List<Object> filesList) {
 		this.dateFormat = new SimpleDateFormat("HH:mm:ss mm/dd/yyyy");
 		endl = "\r\n";
 		for (Object object : filesList) {
 			if ("String".equals(object.getClass().getName())) {
-				loggingList.add((OutputStream) new FileOutputStream((String) object));
+				FileOutputStream f;
+				try {
+					f = new FileOutputStream((String) object);
+				} catch (FileNotFoundException e1) {
+					try {
+						File file = new File((String) object);
+						file.createNewFile();
+						f = new FileOutputStream((String) object);
+					} catch (Exception e2) {
+						// We should probably do something
+						continue;
+					}
+				}
+				loggingList.add((OutputStream)f);
 			} else {
 				loggingList.add((OutputStream) object);
 			}
@@ -70,7 +84,6 @@ public class JettyLogging /* extends AbstractLogger */ {
 				o.write(built.getBytes());
 			} catch (IOException e) {
 				// We should probably do something about this
-                                // Yes we should
 			}
 		}
 	}
