@@ -20,4 +20,9 @@ public class StaticRoute extends Route {
             return "Error 404: Page not found"; // MUST find a better way to do this
         }
     }
+    
+    public StaticRoute(String p, String f) {
+        path = p;
+        file = f;
+    }
 }

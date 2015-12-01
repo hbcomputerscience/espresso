@@ -13,4 +13,9 @@ public class DynamicRoute extends Route {
     public String getContent(Request request) {
         return route.apply(request);
     }
+    
+    public DynamicRoute(String p, Function<Request,String> r) {
+        path = p;
+        route = r;
+    }
 }
