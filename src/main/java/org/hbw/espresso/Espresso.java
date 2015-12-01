@@ -1,30 +1,76 @@
 package org.hbw.espresso;
 
-import java.util.HashMap;
-import java.util.function.Function;
-import org.hbw.espresso.core.functor.Maybe;
-
+import org.hbw.espresso.http.HttpMethod;
+import org.hbw.espresso.router.Router;
 public class Espresso {
+
+    private final Router router = new Router();
     
-    private HashMap<String,Route> routes;
-    
-    public Maybe<Route> getRoute(String path) {
-        return new Maybe(routes.get(path));
+    public Espresso() {
+        
     }
     
-    public Maybe<String> getRouteContent(String path, Request request) {
-        return getRoute(path).fmap(r -> r.getContent(request)); // Find a better way to do this
+     public Espresso get(String path, Handler handler) {
+        router.setRoute(HttpMethod.GET, path, handler);
+
+        return this;
+    }
+
+    public Espresso head(String path, Handler handler) {
+        router.setRoute(HttpMethod.HEAD, path, handler);
+
+        return this;
+    }
+
+    public Espresso post(String path, Handler handler) {
+        router.setRoute(HttpMethod.POST, path, handler);
+
+        return this;
+    }
+
+    public Espresso put(String path, Handler handler) {
+        router.setRoute(HttpMethod.PUT, path, handler);
+
+        return this;
+    }
+
+    public Espresso delete(String path, Handler handler) {
+        router.setRoute(HttpMethod.DELETE, path, handler);
+
+        return this;
+    }
+
+    public Espresso trace(String path, Handler handler) {
+        router.setRoute(HttpMethod.TRACE, path, handler);
+
+        return this;
+    }
+
+    public Espresso options(String path, Handler handler) {
+        router.setRoute(HttpMethod.OPTIONS, path, handler);
+
+        return this;
+    }
+
+    public Espresso connect(String path, Handler handler) {
+        router.setRoute(HttpMethod.CONNECT, path, handler);
+
+        return this;
+    }
+
+    public Espresso patch(String path, Handler handler) {
+        router.setRoute(HttpMethod.PATCH, path, handler);
+
+        return this;
+    }
+
+    public Espresso action(String path, Handler handler) {
+        router.setRoute(HttpMethod.ACTION, path, handler);
+
+        return this;
     }
     
-    public DynamicRoute addRoute(String p, Function<Request,String> r) {
-        DynamicRoute route = new DynamicRoute(p, r);
-        routes.put(p, route);
-        return route;
-    }
-    
-    public StaticRoute addStatic(String p, String f) {
-        StaticRoute route = new StaticRoute(p, f);
-        routes.put(p, route);
-        return route;
+    public void start(int port) {
+        throw new UnsupportedOperationException("No Jetty Inferface");
     }
 }

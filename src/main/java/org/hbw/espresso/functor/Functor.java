@@ -1,4 +1,4 @@
-package org.hbw.espresso.core.functor;
+package org.hbw.espresso.functor;
 
 import java.util.function.Function;
 
