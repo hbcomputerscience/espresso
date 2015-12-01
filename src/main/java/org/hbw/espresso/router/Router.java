@@ -3,6 +3,8 @@ package org.hbw.espresso.router;
 import java.util.ArrayList;
 import java.util.List;
 import org.hbw.espresso.Handler;
+import org.hbw.espresso.Request;
+import org.hbw.espresso.Response;
 import org.hbw.espresso.functor.Maybe;
 import org.hbw.espresso.http.HttpMethod;
 
@@ -31,8 +33,8 @@ public class Router {
         return new Maybe(null);
     }
     
-    // public String executeRoute(String url) {
-    //     Maybe<List<String>> params = this.getRoute(url).fmap(r -> r.extractParams(url));
-    // }
-    
+    public Maybe<String> executeRoute(String url) {
+        Maybe<Route> route = this.getRoute(url);
+        return route.fmap(r -> r.getHandler().accept(new Request(r.extractParams(url)), new Response()));
+    }
 }

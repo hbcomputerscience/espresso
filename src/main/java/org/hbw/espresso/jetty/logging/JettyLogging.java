@@ -56,6 +56,7 @@ public class JettyLogging /* extends AbstractLogger */ {
 				o.write(built.getBytes());
 			} catch (Exception e) {
 				// We should probably do something about this
+                                // Yes we should
 			}
 		}
 	}
