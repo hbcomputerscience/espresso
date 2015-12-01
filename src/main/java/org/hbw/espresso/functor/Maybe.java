@@ -15,6 +15,10 @@ public class Maybe<T> implements Functor<T> {
         value = x;
     }
     
+    public boolean isNothing() {
+        return value == null;
+    }
+    
     public T maybe(T x) {
         return value == null ? x : value;
     }
