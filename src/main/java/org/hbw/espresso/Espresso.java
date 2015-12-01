@@ -1,10 +1,16 @@
 package org.hbw.espresso;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.eclipse.jetty.server.Server;
 import org.hbw.espresso.http.HttpMethod;
 import org.hbw.espresso.router.Router;
+
 public class Espresso {
 
     private final Router router = new Router();
+    
+    private Server server;
     
     public Espresso() {
         
@@ -71,6 +77,14 @@ public class Espresso {
     }
     
     public void start(int port) {
-        throw new UnsupportedOperationException("No Jetty Inferface");
+        try {
+            server = new Server(port);
+            
+            server.setHandler(new EspressoHandler(router));
+            server.start();
+            server.join();
+        } catch (Exception ex) {
+            Logger.getLogger(Espresso.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
