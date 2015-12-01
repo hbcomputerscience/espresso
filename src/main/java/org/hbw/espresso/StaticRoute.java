@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-/**
- *
- * @author Bryan Eastwood
- */
 public class StaticRoute extends Route {
     
     public String file;
