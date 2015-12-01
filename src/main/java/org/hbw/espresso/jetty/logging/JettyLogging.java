@@ -27,10 +27,24 @@ public class JettyLogging /* extends AbstractLogger */ {
 	List<OutputStream> loggingList;
 	Boolean debug;
 	String endl;
-	public JettyLogging(Object... files) throws FileNotFoundException {
+	public static JettyLogging instance = null;
+	public static void Initialize(Object... files) throws FileNotFoundException {
+		if (instance == null) {
+			JettyLogging.getInstance().warn("Tried to initalize an already-initialized logger");
+		} else {
+			instance = new JettyLogging(Arrays.asList(files));
+		}
+	}
+	public static JettyLogging getInstance() throws FileNotFoundException {
+		if (instance == null) {
+			JettyLogging.Initialize(System.out);
+			JettyLogging.getInstance().warn("Tried to get instance without an initialized instance. Automatically creating one that logs to system.out");
+		}
+		return instance;
+	}
+	private JettyLogging(List<Object> filesList) throws FileNotFoundException {
 		this.dateFormat = new SimpleDateFormat("HH:mm:ss mm/dd/yyyy");
 		endl = "\r\n";
-		List<Object> filesList = Arrays.asList(files);
 		for (Object object : filesList) {
 			if ("String".equals(object.getClass().getName())) {
 				loggingList.add((OutputStream) new FileOutputStream((String) object));
@@ -54,7 +68,7 @@ public class JettyLogging /* extends AbstractLogger */ {
 		for (OutputStream o : loggingList) {
 			try {
 				o.write(built.getBytes());
-			} catch (Exception e) {
+			} catch (IOException e) {
 				// We should probably do something about this
                                 // Yes we should
 			}
