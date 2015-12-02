@@ -2,6 +2,7 @@ package org.hbw.espresso;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.hbw.espresso.logging.EspressoLogger;
 import org.eclipse.jetty.server.Server;
 import org.hbw.espresso.http.HttpMethod;
 import org.hbw.espresso.router.Route;
@@ -128,6 +129,7 @@ public class Espresso {
             server.join();
         } catch (Exception ex) {
             Logger.getLogger(Espresso.class.getName()).log(Level.SEVERE, null, ex);
+	    EspressoLogger.warn(ex.toString());
         }
     }
 }

@@ -77,7 +77,7 @@ public class EspressoJettyLogger /* extends AbstractLogger */ {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	EspressoJettyLogger(List<Object> files) {
+	protected EspressoJettyLogger(List<Object> files) {
 		this.dateFormat = new SimpleDateFormat("HH:mm:ss mm/dd/yyyy");
 		this.endl = "\r\n";
 		this.debug = false;

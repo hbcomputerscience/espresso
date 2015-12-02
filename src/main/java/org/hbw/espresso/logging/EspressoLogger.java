@@ -15,7 +15,7 @@ import org.hbw.espresso.functor.Maybe;
  */
 public class EspressoLogger {
 
-	private static Maybe<EspressoJettyLogger> instance = null;
+	private static Maybe<EspressoJettyLogger> instance = new Maybe<>(null);
 
 	public static void Initialize(Object... files) {
 		if (instance.isNothing()) {
