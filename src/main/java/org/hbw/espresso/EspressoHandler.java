@@ -1,18 +1,16 @@
 package org.hbw.espresso;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.hbw.espresso.functor.Maybe;
 import org.hbw.espresso.http.HttpMethod;
 import org.hbw.espresso.router.Router;
-import org.hbw.espresso.logging.EspressoLogger;
 import org.hbw.espresso.router.Route;
+import org.hbw.espresso.logging.EspressoLogger;
 
 public class EspressoHandler extends AbstractHandler {
 
@@ -24,42 +22,79 @@ public class EspressoHandler extends AbstractHandler {
 
 	@Override
 	public void handle(String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		
-		Response res = new Response(response);
-		
+
 		Maybe<HttpMethod> method = Router.toHttpMethod(request.getMethod());
-		
+
 		Maybe<Route> route = router.getRoute(uri, method);
-		
+
 		if (route.isNothing()) {
-			EspressoLogger.info(String.format("404: %s %s request unhandled.", request.getMethod(), uri));
+			handleError(404, uri, baseRequest, request, response);
 			return;
 		}
+
+		executeHandler(route, uri, baseRequest, request, response);
+	}
+
+	private void handleError(Integer errorCode, String uri, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		EspressoLogger.info(String.format("%s %s", request.getMethod(), uri));
+
+		Maybe<HttpMethod> method = Router.toHttpMethod(request.getMethod());
+
+		Maybe<Route> errorRoute = router.getErrorRoute(errorCode, method);
+
+		if (errorRoute.isNothing()) {
+			defaultErrorHandler(errorCode, uri, baseRequest, request, response);
+			return;
+		}
+
+		executeHandler(errorRoute, uri, baseRequest, request, response);
+	}
+
+	private void executeHandler(Maybe<Route> route, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		if (route.isNothing()) {
+			throw new IllegalArgumentException("Invalid route.");
+		}
+
+		Response res = new Response(response);
+
+		Maybe<String> resp = router.executeRoute(route, uri, request, res);
+
+		// Set status
+		response.setStatus(res.status());
+
+		// Set content type
+		response.setContentType(res.contentType());
+
+		// Set Headers
+		res.headers().forEach(response::setHeader);
+
+		// Set body
+		if (resp.isNothing()) {
+			response.getWriter().println(res.raw());
+		} else {
+			resp.fmap(f -> {
+				try {
+					response.getWriter().println(f);
+				} catch (IOException ex) {
+					EspressoLogger.warn(ex);
+				}
+			});
+		}
+
+		baseRequest.setHandled(true);
+	}
+
+	private void defaultErrorHandler(Integer errorCode, String uri, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Maybe<Route> errorRoute = new Maybe<>(new Route(HttpMethod.ACTION, uri, (req, res) -> {
+			StringBuilder sb = new StringBuilder();
+			sb.append(String.format("<title>Error!</title>"));
+			sb.append(String.format("<h2>HTTP Error: %d</h2>", errorCode));
+			sb.append("<hr>Powered by Espresso.");
+			
+			return sb.toString();
+		}));
 		
-        Maybe<String> resp = router.executeRoute(route, uri, request, res);
-        
-        // Set status
-        response.setStatus(res.status());
-        
-        // Set content type
-        response.setContentType(res.contentType());
-        
-        // Set Headers
-        res.headers().forEach(response::setHeader);
-        
-        // Set body
-        if (resp.isNothing()) {
-            response.getWriter().println(res.raw());
-        } else {
-            resp.fmap(f -> {
-                try {
-                    response.getWriter().println(f);
-                } catch (IOException ex) {
-                    Logger.getLogger(EspressoHandler.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-        }
-        
-        baseRequest.setHandled(true);
+		executeHandler(errorRoute, uri, baseRequest, request, response);
 	}
 }

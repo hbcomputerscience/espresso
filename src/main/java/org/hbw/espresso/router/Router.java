@@ -14,7 +14,7 @@ public class Router {
 
 	private final List<Route> routes = new ArrayList<>();
 
-	private final HashMap<Integer, Route> errorRoutes = new HashMap<>();
+	private final HashMap<Integer, List<Route>> errorRoutes = new HashMap<>();
 
 	public Router() {
 
@@ -33,7 +33,11 @@ public class Router {
 	}
 
 	public void setErrorRoute(Integer code, Route route) {
-		errorRoutes.put(code, route);
+		if (!errorRoutes.containsKey(code)) {
+			errorRoutes.put(code, new ArrayList<>());
+		}
+
+		errorRoutes.get(code).add(route);
 	}
 
 	public void setRoute(Route route) {
@@ -44,16 +48,30 @@ public class Router {
 		setRoute(new Route(httpMethod, path, handler));
 	}
 
+	public Maybe<Route> getErrorRoute(Integer errorCode, Maybe<HttpMethod> method) {
+		return method.fmap(m -> {
+			if (errorRoutes.containsKey(errorCode)) {
+				for(Route route : errorRoutes.get(errorCode)) {
+					if (route.getMethod().equals(HttpMethod.ACTION) || m.equals(route.getMethod())) {
+						return route;
+					}
+				}
+			}
+
+			return null;
+		});
+	}
+
 	public Maybe<Route> getRoute(String url, Maybe<HttpMethod> method) {
 		return method.fmap(m -> {
 			for (Route route : routes) {
-				if (m == HttpMethod.ACTION || m.equals(route.getMethod())) {
+				if (route.getMethod().equals(HttpMethod.ACTION) || m.equals(route.getMethod())) {
 					if (route.matchRoute(url)) {
 						return route;
 					}
 				}
 			}
-			
+
 			return null;
 		});
 	}
