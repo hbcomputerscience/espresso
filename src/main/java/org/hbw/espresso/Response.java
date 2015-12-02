@@ -1,5 +1,7 @@
 package org.hbw.espresso;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 public class Response {
@@ -10,24 +12,40 @@ public class Response {
     
     private Integer status = 200;
     
+    private final Map<String, String> headers = new HashMap<>();
+    
 	public Response(HttpServletResponse response) {
         this.response = response;
     }
 
-    public String getContentType() {
+    public String contentType() {
         return contentType;
     }
 
-    public void setContentType(String contentType) {
+    public Response contentType(String contentType) {
         this.contentType = contentType;
+        
+        return this;
     }
 
-    public Integer getStatus() {
+    public Integer status() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public Response status(Integer status) {
         this.status = status;
+        
+        return this;
+    }
+    
+    public Map<String, String> headers() {
+        return headers;
+    }
+    
+    public Response header(String key, String value) {
+        headers.put(key, value);
+        
+        return this;
     }
     
     public String getRaw() {

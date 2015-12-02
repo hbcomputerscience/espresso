@@ -1,6 +1,7 @@
 package org.hbw.espresso;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -28,9 +29,16 @@ public class EspressoHandler extends AbstractHandler {
         
         Maybe<String> resp = router.executeRoute(uri, request, res);
         
-        response.setStatus(res.getStatus());
-        response.setContentType(res.getContentType());
+        // Set status
+        response.setStatus(res.status());
         
+        // Set content type
+        response.setContentType(res.contentType());
+        
+        // Set Headers
+        res.headers().forEach(response::setHeader);
+        
+        // Set body
         if (resp.isNothing()) {
             response.getWriter().println(res.getRaw());
         } else {
