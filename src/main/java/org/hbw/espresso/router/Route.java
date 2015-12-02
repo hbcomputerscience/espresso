@@ -36,7 +36,7 @@ public class Route {
 		List<String> p2 = Arrays.asList(url.split("/"));
 
 		for (int i = 0; i < p1.size(); i++) {
-			if (p1.size() > 0 && p1.get(i).charAt(0) == ':') {
+			if (p1.get(i).length() > 0 && p1.get(i).charAt(0) == ':') {
 				vars.add(p2.get(i));
 			}
 		}
