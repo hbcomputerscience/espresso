@@ -15,7 +15,7 @@ public class Route {
 	private final Handler handler;
 
 	public boolean matchRoute(String url) {
-        List<String> p1 = Arrays.asList(path.split(" "));
+        List<String> p1 = Arrays.asList(path.split("/"));
 		List<String> p2 = Arrays.asList(url.split("/"));
 
 		if (p1.size() != p2.size()) {
@@ -32,7 +32,7 @@ public class Route {
 
 	public List<String> extractParams(String url) {
 		List<String> vars = new ArrayList();
-		List<String> p1 = Arrays.asList(path.split(" "));
+		List<String> p1 = Arrays.asList(path.split("/"));
 		List<String> p2 = Arrays.asList(url.split("/"));
 
 		for (int i = 0; i < p1.size(); i++) {
