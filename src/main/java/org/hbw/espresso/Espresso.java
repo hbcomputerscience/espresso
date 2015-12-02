@@ -45,7 +45,7 @@ public class Espresso {
 	}
 
 	public Espresso options(String path, Handler handler) {
-		return route(HttpMethod.OPTIONS, path, handler);
+        return route(HttpMethod.OPTIONS, path, handler);
 	}
 
 	public Espresso connect(String path, Handler handler) {

@@ -15,6 +15,10 @@ public class Route {
 	private final Handler handler;
 
 	public boolean matchRoute(String url) {
+        if (url.equals(path)) {
+            return true;
+        }
+        
 		List<String> p1 = Arrays.asList(path.split(" "));
 		List<String> p2 = Arrays.asList(url.split("/"));
 
