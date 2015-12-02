@@ -18,10 +18,9 @@ public class EspressoLogger {
 	private static Maybe<EspressoJettyLogger> instance = new Maybe<>(null);
 
 	public static void Initialize(Object... files) {
-		if (instance.isNothing()) {
+		if (!instance.isNothing()) {
 			EspressoLogger.warn("Tried to initalize an already-initialized logger");
 		} else {
-			System.out.println(files.length);
 			instance = new Maybe<>(new EspressoJettyLogger(Arrays.asList(files)));
 		}
 	}
@@ -46,11 +45,15 @@ public class EspressoLogger {
 	}
 
 	public static void warn(Throwable thrwbl) {
-		
+		instance.fmap(((x) -> {
+			x.warn(thrwbl);
+		}));
 	}
 
 	public static void warn(String string, Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		instance.fmap(((x) -> {
+			x.warn(string, thrwbl);
+		}));
 	}
 
 	public static void info(String string, Object... os) {
@@ -60,11 +63,15 @@ public class EspressoLogger {
 	}
 
 	public static void info(Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		instance.fmap(((x) -> {
+			x.info(thrwbl);
+		}));
 	}
 
 	public static void info(String string, Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		instance.fmap(((x) -> {
+			x.info(string, thrwbl);
+		}));
 	}
 
 	public static Maybe<Boolean> isDebugEnabled() {
@@ -87,14 +94,20 @@ public class EspressoLogger {
 	}
 
 	public static void debug(Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		instance.fmap(((x) -> {
+			x.debug(thrwbl);
+		}));
 	}
 
 	public static void debug(String string, Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		instance.fmap(((x) -> {
+			x.debug(string, thrwbl);
+		}));
 	}
 
 	public static void ignore(Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		instance.fmap(((x) -> {
+			x.ignore(thrwbl);
+		}));
 	}
 }

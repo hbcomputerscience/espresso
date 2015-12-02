@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,7 @@ import org.eclipse.jetty.util.log.Logger;
 public class EspressoJettyLogger extends AbstractLogger {
 
 	DateFormat dateFormat;
-	List<OutputStream> loggingList;
+	List<OutputStream> loggingList = new ArrayList<OutputStream>();
 	Boolean debug;
 	String endl;
 
@@ -27,9 +28,9 @@ public class EspressoJettyLogger extends AbstractLogger {
 		builder.append("[");
 		builder.append(ManagementFactory.getRuntimeMXBean().getName());
 		builder.append(" ");
-		builder.append(type);
-		builder.append(" ");
 		builder.append(this.dateFormat.format(new Date()));
+		builder.append(" ");
+		builder.append(type);
 		builder.append("] ");
 		builder.append(message);
 		builder.append(endl);
@@ -43,28 +44,27 @@ public class EspressoJettyLogger extends AbstractLogger {
 		}
 	}
 
-	private void handleFile(String s) {
-		FileOutputStream f;
-		try {
-			f = new FileOutputStream(s);
-		} catch (FileNotFoundException e1) {
-			try {
-				File file = new File(s);
-				file.createNewFile();
-				f = new FileOutputStream(s);
-			} catch (Exception e2) {
-				// We should probably do something about this
-				return;
-			}
-		}
-		loggingList.add((OutputStream) f);
-	}
-
-	private void handleFile(OutputStream s) {
-		loggingList.add(s);
-	}
-
 	private void handleFile(Object s) {
+		if (s instanceof OutputStream) {
+			loggingList.add((OutputStream) s);
+			return;
+		} else if (s instanceof String) {
+			FileOutputStream f;
+			try {
+				f = new FileOutputStream((String) s);
+			} catch (FileNotFoundException e1) {
+				try {
+					File file = new File((String) s);
+					file.createNewFile();
+					f = new FileOutputStream((String) s);
+				} catch (Exception e2) {
+					// We should probably do something about this
+					return;
+				}
+			}
+			loggingList.add((OutputStream) f);
+			return;
+		}
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
@@ -72,10 +72,7 @@ public class EspressoJettyLogger extends AbstractLogger {
 		this.dateFormat = new SimpleDateFormat("HH:mm:ss mm/dd/yyyy");
 		this.endl = "\r\n";
 		this.debug = false;
-		for (Object object : Arrays.asList(files)) {
-			// TESTINg
-			System.out.println(object.toString());
-			
+		for (Object object : files) {
 			handleFile(object);
 		}
 	}
@@ -96,13 +93,16 @@ public class EspressoJettyLogger extends AbstractLogger {
 	}
 
 	@Override
-	public void warn(Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public void warn(Throwable e) {
+		Arrays.asList(e.getStackTrace()).stream().forEachOrdered((x -> {
+			this.warn(x.toString());
+		}));
 	}
 
 	@Override
 	public void warn(String string, Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		this.warn(string);
+		this.warn(thrwbl);
 	}
 
 	@Override
@@ -119,7 +119,8 @@ public class EspressoJettyLogger extends AbstractLogger {
 
 	@Override
 	public void info(String string, Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		this.info(string);
+		this.info(thrwbl);
 	}
 
 	@Override
@@ -140,18 +141,20 @@ public class EspressoJettyLogger extends AbstractLogger {
 	}
 
 	@Override
-	public void debug(Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public void debug(Throwable e) {
+		Arrays.asList(e.getStackTrace()).stream().forEachOrdered((x -> {
+			this.debug(x.toString());
+		}));
 	}
 
 	@Override
 	public void debug(String string, Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		this.debug(string);
+		this.debug(thrwbl);
 	}
 
 	@Override
-	public void ignore(Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public void ignore(Throwable e) {
 	}
 
 }
