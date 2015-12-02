@@ -1,5 +1,6 @@
 package org.hbw.espresso.logging;
 
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import org.hbw.espresso.functor.Maybe;
@@ -8,7 +9,7 @@ public class EspressoLogger {
 
 	private static Maybe<EspressoJettyLogger> instance = new Maybe<>(null);
 
-	public static void initialize(Object... files) {
+	public static void initialize(OutputStream... files) {
 		if (!instance.isNothing()) {
 			EspressoLogger.warn("Tried to initalize an already-initialized logger");
 		} else {

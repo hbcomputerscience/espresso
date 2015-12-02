@@ -44,37 +44,12 @@ public class EspressoJettyLogger extends AbstractLogger {
 		}
 	}
 
-	private void handleFile(Object s) {
-		if (s instanceof OutputStream) {
-			loggingList.add((OutputStream) s);
-			return;
-		} else if (s instanceof String) {
-			// Pending a complete rewrite
-			FileOutputStream f;
-			try {
-				f = new FileOutputStream((String) s);
-			} catch (FileNotFoundException e1) {
-				try {
-					File file = new File((String) s);
-					file.createNewFile();
-					f = new FileOutputStream((String) s);
-				} catch (Exception e2) {
-					// We should probably do something about this
-					return;
-				}
-			}
-			loggingList.add((OutputStream) f);
-			return;
-		}
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	protected EspressoJettyLogger(List<Object> files) {
+	protected EspressoJettyLogger(List<OutputStream> files) {
 		this.dateFormat = new SimpleDateFormat("HH:mm:ss mm/dd/yyyy");
 		this.endl = "\r\n";
 		this.debug = false;
-		for (Object object : files) {
-			handleFile(object);
+		for (OutputStream s : files) {
+			loggingList.add(s);
 		}
 	}
 
