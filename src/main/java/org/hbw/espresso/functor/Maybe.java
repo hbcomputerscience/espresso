@@ -1,5 +1,6 @@
 package org.hbw.espresso.functor;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -8,28 +9,34 @@ import java.util.function.Function;
  * @param <T>
  */
 public class Maybe<T> implements Functor<T> {
-    
-    private final T value;
-    
-    public Maybe(T x) {
-        value = x;
-    }
-    
-    public boolean isNothing() {
-        return value == null;
-    }
-    
-    public T maybe(T x) {
-        return value == null ? x : value;
-    }
-    
-    @Override
-    public String toString() {
-        return value == null ? "Nothing" : "Just " + value.toString();
-    }
-    
-    @Override
-    public <T2> Maybe<T2> fmap(Function<T,T2> f) {
-        return new Maybe(value == null ? value : f.apply(value));
-    }
+
+	private final T value;
+
+	public Maybe(T x) {
+		value = x;
+	}
+
+	public boolean isNothing() {
+		return value == null;
+	}
+
+	public T maybe(T x) {
+		return value == null ? x : value;
+	}
+
+	@Override
+	public String toString() {
+		return value == null ? "Nothing" : "Just " + value.toString();
+	}
+
+	@Override
+	public <T2> Maybe<T2> fmap(Function<T, T2> f) {
+		return new Maybe(value == null ? value : f.apply(value));
+	}
+
+	public void fmap(Consumer<T> f) {
+		if (value != null) {
+			f.accept(value);
+		}
+	}
 }
