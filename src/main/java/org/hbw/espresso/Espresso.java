@@ -19,7 +19,7 @@ public class Espresso {
 
 	}
 
-    // Handler Routes
+	// Handler Routes
 	public Espresso get(String path, Handler handler) {
 		return route(HttpMethod.GET, path, handler);
 	}
@@ -64,7 +64,7 @@ public class Espresso {
 		return route(new Route(method, path, handler));
 	}
 
-    // Static Routes
+	// Static Routes
 	public Espresso get(String path) {
 		return route(HttpMethod.GET, path);
 	}
@@ -115,7 +115,7 @@ public class Espresso {
 		return this;
 	}
 
-    // Handler Error Routes
+	// Handler Error Routes
 	public Espresso get(Integer errorCode, Handler handler) {
 		return errorRoute(errorCode, HttpMethod.GET, handler);
 	}
@@ -160,7 +160,7 @@ public class Espresso {
 		return errorRoute(errorCode, new Route(method, null, handler));
 	}
 
-    // Static Error Routes
+	// Static Error Routes
 	public Espresso get(Integer errorCode, String path) {
 		return errorRoute(errorCode, new StaticRoute(HttpMethod.GET, path));
 	}

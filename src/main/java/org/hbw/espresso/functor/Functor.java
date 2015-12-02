@@ -8,5 +8,6 @@ import java.util.function.Function;
  * @param <T>
  */
 public interface Functor<T> {
-    <T2> Functor<T2> fmap(Function<T,T2> f);
+
+	<T2> Functor<T2> fmap(Function<T, T2> f);
 }
