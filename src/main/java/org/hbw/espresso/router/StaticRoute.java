@@ -15,10 +15,13 @@ public class StaticRoute extends Route {
 		super(m, p, (x, y) -> {
 			try {
                             return new String(Files.readAllBytes(Paths.get(new URI(p).normalize())));
-			} catch (IOException e) {
+			} catch (FileNotFoundException e) {
                             return "Error 404"; // Change this soon
 			} catch (URISyntaxException e) {
-                            EspressoLogger.warn("Possible directory traversal attack.");
+                            EspressoLogger.warn("Possible directory traversal attack on URI "
+                                                + e.getInput());
+                            return "An error occured";
+                        } catch (IOException e) {
                             return "An error occured";
                         }
 		});
