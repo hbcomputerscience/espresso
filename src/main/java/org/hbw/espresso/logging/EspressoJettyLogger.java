@@ -49,6 +49,7 @@ public class EspressoJettyLogger extends AbstractLogger {
 			loggingList.add((OutputStream) s);
 			return;
 		} else if (s instanceof String) {
+			// Pending a complete rewrite
 			FileOutputStream f;
 			try {
 				f = new FileOutputStream((String) s);
