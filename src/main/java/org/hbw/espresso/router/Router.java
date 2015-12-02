@@ -1,6 +1,7 @@
 package org.hbw.espresso.router;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.hbw.espresso.Handler;
 import org.hbw.espresso.Request;
@@ -12,8 +13,18 @@ public class Router {
 
     private final List<Route> routes = new ArrayList<>();
     
+    private final HashMap<Integer,Route> errorRoutes = new HashMap();
+        
     public Router() {
         
+    }
+    
+    public void setErrorRoute(Integer code, Route route) {
+        errorRoutes.put(code, route);
+    }
+    
+    public void setErrorRoute(Integer code, HttpMethod httpMethod, String path, Handler handler) {
+        setErrorRoute(code, new Route(httpMethod, path, handler));
     }
     
     public void setRoute(Route route) {
