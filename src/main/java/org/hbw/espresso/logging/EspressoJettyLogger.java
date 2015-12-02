@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-//import org.eclipse.jetty.util.log.AbstractLogger;
+import org.eclipse.jetty.util.log.AbstractLogger;
 import org.eclipse.jetty.util.log.JavaUtilLog;
 import org.eclipse.jetty.util.log.Logger;
 
@@ -24,7 +24,7 @@ import org.eclipse.jetty.util.log.Logger;
  *
  * @author niles
  */
-public class EspressoJettyLogger /* extends AbstractLogger */ {
+public class EspressoJettyLogger extends AbstractLogger {
 
 	DateFormat dateFormat;
 	List<OutputStream> loggingList;
@@ -86,60 +86,74 @@ public class EspressoJettyLogger /* extends AbstractLogger */ {
 		}
 	}
 
+	@Override
 	protected Logger newLogger(String string) {
 		return new JavaUtilLog(string);
 	}
 
+	@Override
 	public String getName() {
 		return "Jetty Logger for Espresso";
 	}
 
+	@Override
 	public void warn(String string, Object... os) {
 		logMessage("WARNING", string);
 	}
 
+	@Override
 	public void warn(Throwable thrwbl) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	@Override
 	public void warn(String string, Throwable thrwbl) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	@Override
 	public void info(String string, Object... os) {
 		logMessage("INFO", string);
 	}
 
+	@Override
 	public void info(Throwable thrwbl) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	@Override
 	public void info(String string, Throwable thrwbl) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	public Boolean isDebugEnabled() {
+	@Override
+	public boolean isDebugEnabled() {
 		return this.debug;
 	}
 
+	@Override
 	public void setDebugEnabled(boolean bln) {
 		this.debug = (Boolean) bln;
 	}
 
+	@Override
 	public void debug(String string, Object... os) {
 		if (this.debug) {
 			logMessage("DEBUG", string);
 		}
 	}
 
+	@Override
 	public void debug(Throwable thrwbl) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	@Override
 	public void debug(String string, Throwable thrwbl) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	@Override
 	public void ignore(Throwable thrwbl) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
