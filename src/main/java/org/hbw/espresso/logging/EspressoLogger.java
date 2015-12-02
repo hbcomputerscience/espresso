@@ -47,29 +47,33 @@ public class EspressoLogger /* extends AbstractLogger */ {
 		}
 		return instance;
 	}
-
+	private void handleFile(String s) {
+		FileOutputStream f;
+		try {
+			f = new FileOutputStream(s);
+		} catch (FileNotFoundException e1) {
+			try {
+				File file = new File(s);
+				file.createNewFile();
+				f = new FileOutputStream(s);
+			} catch (Exception e2) {
+				// We should probably do something
+				return;
+			}
+		}
+		loggingList.add((OutputStream) f);
+	}
+	private void handleFile(OutputStream s) {
+		loggingList.add(s);
+	}
+	private void handleFile(Object s) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 	private EspressoLogger(List<Object> filesList) {
 		this.dateFormat = new SimpleDateFormat("HH:mm:ss mm/dd/yyyy");
 		endl = "\r\n";
 		for (Object object : filesList) {
-			if ("String".equals(object.getClass().getName())) {
-				FileOutputStream f;
-				try {
-					f = new FileOutputStream((String) object);
-				} catch (FileNotFoundException e1) {
-					try {
-						File file = new File((String) object);
-						file.createNewFile();
-						f = new FileOutputStream((String) object);
-					} catch (Exception e2) {
-						// We should probably do something
-						continue;
-					}
-				}
-				loggingList.add((OutputStream) f);
-			} else {
-				loggingList.add((OutputStream) object);
-			}
+			handleFile(object);
 		}
 	}
 
