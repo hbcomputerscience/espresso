@@ -160,7 +160,7 @@ public class Espresso {
 	}
 
 	public Espresso errorRoute(Integer errorCode, HttpMethod method, Handler handler) {
-		return errorRoute(errorCode, new Route(method, null, handler));
+		return errorRoute(errorCode, new Route(method, "", handler));
 	}
 
 	// Static Error Routes

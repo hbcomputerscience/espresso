@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.hbw.espresso.functor.Maybe;
+import org.hbw.espresso.http.HttpMethod;
 import org.hbw.espresso.router.Router;
 import org.hbw.espresso.logging.EspressoLogger;
 import org.hbw.espresso.router.Route;
@@ -25,8 +26,10 @@ public class EspressoHandler extends AbstractHandler {
 	public void handle(String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
 		Response res = new Response(response);
-        
-		Maybe<Route> route = router.getRoute(uri);
+		
+		Maybe<HttpMethod> method = Router.toHttpMethod(request.getMethod());
+		
+		Maybe<Route> route = router.getRoute(uri, method);
 		
 		if (route.isNothing()) {
 			EspressoLogger.info(String.format("404: %s %s request unhandled.", request.getMethod(), uri));

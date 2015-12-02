@@ -20,6 +20,18 @@ public class Router {
 
 	}
 
+	public static Maybe<HttpMethod> toHttpMethod(String method) {
+		HttpMethod httpMethod = null;
+
+		try {
+			httpMethod = HttpMethod.valueOf(method);
+		} catch (IllegalArgumentException ex) {
+
+		}
+
+		return new Maybe<>(httpMethod);
+	}
+
 	public void setErrorRoute(Integer code, Route route) {
 		errorRoutes.put(code, route);
 	}
@@ -32,19 +44,24 @@ public class Router {
 		setRoute(new Route(httpMethod, path, handler));
 	}
 
-	public Maybe<Route> getRoute(String url) {
-		for (Route route : routes) {
-			if (route.matchRoute(url)) {
-				return new Maybe(route);
+	public Maybe<Route> getRoute(String url, Maybe<HttpMethod> method) {
+		return method.fmap(m -> {
+			for (Route route : routes) {
+				if (m == HttpMethod.ACTION || m.equals(route.getMethod())) {
+					if (route.matchRoute(url)) {
+						return route;
+					}
+				}
 			}
-		}
-		return new Maybe(null);
+			
+			return null;
+		});
 	}
 
 	public Maybe<String> executeRoute(Maybe<Route> route, String url, HttpServletRequest request, Response response) {
 		return route.fmap(r -> {
-            return r.getHandler().accept(new Request(request, r.extractParams(url)), response);
+			return r.getHandler().accept(new Request(request, r.extractParams(url)), response);
 		});
-        
+
 	}
 }
