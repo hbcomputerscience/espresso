@@ -48,7 +48,7 @@ public class Route {
         this.path = path;
         this.handler = handler;
     }
-
+    
     public HttpMethod getMethod() {
         return method;
     }
