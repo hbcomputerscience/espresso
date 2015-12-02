@@ -11,6 +11,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.hbw.espresso.functor.Maybe;
 import org.hbw.espresso.router.Router;
 import org.hbw.espresso.logging.EspressoLogger;
+import org.hbw.espresso.router.Route;
 
 public class EspressoHandler extends AbstractHandler {
 
@@ -23,11 +24,16 @@ public class EspressoHandler extends AbstractHandler {
 	@Override
 	public void handle(String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
-        EspressoLogger.info(String.format("%s %s", request.getMethod(), uri));
+		Response res = new Response(response);
         
-        Response res = new Response(response);
-        
-        Maybe<String> resp = router.executeRoute(uri, request, res);
+		Maybe<Route> route = router.getRoute(uri);
+		
+		if (route.isNothing()) {
+			EspressoLogger.info(String.format("404: %s %s request unhandled.", request.getMethod(), uri));
+			return;
+		}
+		
+        Maybe<String> resp = router.executeRoute(route, uri, request, res);
         
         // Set status
         response.setStatus(res.status());

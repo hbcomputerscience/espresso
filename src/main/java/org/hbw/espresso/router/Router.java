@@ -41,9 +41,7 @@ public class Router {
 		return new Maybe(null);
 	}
 
-	public Maybe<String> executeRoute(String url, HttpServletRequest request, Response response) {
-		Maybe<Route> route = this.getRoute(url);
-        
+	public Maybe<String> executeRoute(Maybe<Route> route, String url, HttpServletRequest request, Response response) {
 		return route.fmap(r -> {
             return r.getHandler().accept(new Request(request, r.extractParams(url)), response);
 		});
