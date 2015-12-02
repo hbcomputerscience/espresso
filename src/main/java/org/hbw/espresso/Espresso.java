@@ -86,7 +86,7 @@ public class Espresso {
             server.join();
         } catch (Exception ex) {
             Logger.getLogger(Espresso.class.getName()).log(Level.SEVERE, null, ex);
-	    EspressoLogger.getInstance().warn(ex.toString());
+	    EspressoLogger.warn(ex.toString());
         }
     }
 }
