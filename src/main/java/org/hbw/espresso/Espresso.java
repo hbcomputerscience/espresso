@@ -19,7 +19,9 @@ public class Espresso {
         
     }
     
-     public Espresso get(String path, Handler handler) {
+    // Handler Routes
+    
+    public Espresso get(String path, Handler handler) {
         return route(HttpMethod.GET, path, handler);
     }
 
@@ -63,62 +65,156 @@ public class Espresso {
         return route(new Route(method, path, handler));
     }
     
+    // Static Routes
+    
+    public Espresso get(String path) {
+        return route(HttpMethod.GET, path);
+    }
+    
+    public Espresso head(String path) {
+        return route(HttpMethod.HEAD, path);
+    }
+    
+    public Espresso put(String path) {
+        return route(HttpMethod.PUT, path);
+    }
+    
+    public Espresso post(String path) {
+        return route(HttpMethod.POST, path);
+    }
+    
+    public Espresso delete(String path) {
+        return route(HttpMethod.DELETE, path);
+    }
+    
+    public Espresso trace(String path) {
+        return route(HttpMethod.TRACE, path);
+    }
+    
+    public Espresso options(String path) {
+        return route(HttpMethod.OPTIONS, path);
+    }
+    
+    public Espresso connect(String path) {
+        return route(HttpMethod.CONNECT, path);
+    }
+    
+    public Espresso patch(String path) {
+        return route(HttpMethod.PATCH, path);
+    }
+    
+    public Espresso action(String path) {
+        return route(HttpMethod.ACTION, path);
+    }
+    
+    public Espresso route(HttpMethod method, String path) {
+        return route(new StaticRoute(method, path));
+    }
+    
     public Espresso route(Route route) {
         router.setRoute(route);
         
         return this;
     }
     
-    public Espresso staticGet(String path) {
-        return staticRoute(HttpMethod.GET, path);
+    // Handler Error Routes
+    
+    public Espresso get(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.GET, handler);
+    }
+   
+    public Espresso head(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.HEAD, handler);
+    }
+
+    public Espresso post(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.POST, handler);
+    }
+
+    public Espresso put(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.PUT, handler);
+    }
+
+    public Espresso delete(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.DELETE, handler);
+    }
+
+    public Espresso trace(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.TRACE, handler);
+    }
+
+    public Espresso options(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.OPTIONS, handler);
+    }
+
+    public Espresso connect(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.CONNECT, handler);
+    }
+
+    public Espresso patch(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.PATCH, handler);
+    }
+
+    public Espresso action(Integer errorCode, Handler handler) {
+        return errorRoute(errorCode, HttpMethod.ACTION, handler);
     }
     
-    public Espresso staticHead(String path) {
-        return staticRoute(HttpMethod.HEAD, path);
+    public Espresso errorRoute(Integer errorCode, HttpMethod method, Handler handler) {
+        return errorRoute(errorCode, new Route(method, null, handler));
     }
     
     
-    public Espresso staticPut(String path) {
-        return staticRoute(HttpMethod.PUT, path);
+    // Static Error Routes
+    
+    public Espresso get(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.GET, path));
     }
     
-    public Espresso staticPost(String path) {
-        return staticRoute(HttpMethod.POST, path);
+    public Espresso head(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.HEAD, path));
     }
     
-    public Espresso staticDelete(String path) {
-        return staticRoute(HttpMethod.DELETE, path);
+    public Espresso put(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.PUT, path));
     }
     
-    public Espresso staticTrace(String path) {
-        return staticRoute(HttpMethod.TRACE, path);
+    public Espresso post(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.POST, path));
     }
     
-    public Espresso staticOptions(String path) {
-        return staticRoute(HttpMethod.OPTIONS, path);
+    public Espresso delete(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.DELETE, path));
     }
     
-    public Espresso staticConnect(String path) {
-        return staticRoute(HttpMethod.CONNECT, path);
+    public Espresso trace(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.TRACE, path));
     }
     
-    public Espresso staticPatch(String path) {
-        return staticRoute(HttpMethod.PATCH, path);
+    public Espresso options(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.OPTIONS, path));
     }
     
-    public Espresso staticAction(String path) {
-        return staticRoute(HttpMethod.ACTION, path);
+    public Espresso connect(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.CONNECT, path));
     }
     
-    public Espresso staticRoute(HttpMethod method, String path) {
-        return staticRoute(new StaticRoute(method, path));
+    public Espresso patch(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.PATCH, path));
     }
     
-    public Espresso staticRoute(StaticRoute route) {
-        router.setRoute(route);
+    public Espresso action(Integer errorCode, String path) {
+        return errorRoute(errorCode, new StaticRoute(HttpMethod.ACTION, path));
+    }
+    
+    public Espresso errorRoute(Integer errorCode, HttpMethod method, String path) {
+        return errorRoute(errorCode, new StaticRoute(method, path));
+    }
+    
+    public Espresso errorRoute(Integer errorCode, Route route) {
+        router.setErrorRoute(errorCode, route);
         
         return this;
-    } 
+    }
     
     public void start(int port) {
         try {
