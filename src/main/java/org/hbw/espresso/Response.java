@@ -48,7 +48,7 @@ public class Response {
         return this;
     }
     
-    public String getRaw() {
-        return "test";
+    public String raw() {
+        return "";
     }
 }

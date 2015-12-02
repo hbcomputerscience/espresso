@@ -40,7 +40,7 @@ public class EspressoHandler extends AbstractHandler {
         
         // Set body
         if (resp.isNothing()) {
-            response.getWriter().println(res.getRaw());
+            response.getWriter().println(res.raw());
         } else {
             resp.fmap(f -> {
                 try {
