@@ -73,6 +73,9 @@ public class EspressoJettyLogger extends AbstractLogger {
 		this.endl = "\r\n";
 		this.debug = false;
 		for (Object object : Arrays.asList(files)) {
+			// TESTINg
+			System.out.println(object.toString());
+			
 			handleFile(object);
 		}
 	}
@@ -108,8 +111,10 @@ public class EspressoJettyLogger extends AbstractLogger {
 	}
 
 	@Override
-	public void info(Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public void info(Throwable e) {
+		Arrays.asList(e.getStackTrace()).stream().forEachOrdered((x -> {
+			this.info(x.toString());
+		}));
 	}
 
 	@Override
@@ -147,10 +152,6 @@ public class EspressoJettyLogger extends AbstractLogger {
 	@Override
 	public void ignore(Throwable thrwbl) {
 		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	void setDebug(boolean b) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 }

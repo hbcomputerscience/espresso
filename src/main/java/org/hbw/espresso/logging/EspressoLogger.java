@@ -21,6 +21,7 @@ public class EspressoLogger {
 		if (instance.isNothing()) {
 			EspressoLogger.warn("Tried to initalize an already-initialized logger");
 		} else {
+			System.out.println(files.length);
 			instance = new Maybe<>(new EspressoJettyLogger(Arrays.asList(files)));
 		}
 	}
@@ -45,7 +46,7 @@ public class EspressoLogger {
 	}
 
 	public static void warn(Throwable thrwbl) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		
 	}
 
 	public static void warn(String string, Throwable thrwbl) {
@@ -74,7 +75,7 @@ public class EspressoLogger {
 
 	public static void setDebugEnabled(Boolean bln) {
 		instance.fmap(x -> {
-			x.setDebug((boolean) bln);
+			x.setDebugEnabled((boolean) bln);
 		});
 	}
 
