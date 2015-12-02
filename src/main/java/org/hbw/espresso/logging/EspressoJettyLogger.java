@@ -19,7 +19,7 @@ import org.eclipse.jetty.util.log.Logger;
 public class EspressoJettyLogger extends AbstractLogger {
 
 	DateFormat dateFormat;
-	List<OutputStream> loggingList = new ArrayList<OutputStream>();
+	List<OutputStream> loggingList = new ArrayList<>();
 	Boolean debug;
 	String endl;
 
