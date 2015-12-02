@@ -47,6 +47,7 @@ public class EspressoLogger /* extends AbstractLogger */ {
 		}
 		return instance;
 	}
+
 	private void handleFile(String s) {
 		FileOutputStream f;
 		try {
@@ -63,12 +64,15 @@ public class EspressoLogger /* extends AbstractLogger */ {
 		}
 		loggingList.add((OutputStream) f);
 	}
+
 	private void handleFile(OutputStream s) {
 		loggingList.add(s);
 	}
+
 	private void handleFile(Object s) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
+
 	private EspressoLogger(List<Object> filesList) {
 		this.dateFormat = new SimpleDateFormat("HH:mm:ss mm/dd/yyyy");
 		endl = "\r\n";
