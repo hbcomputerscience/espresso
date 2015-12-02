@@ -1,23 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.hbw.espresso.logging;
 
 import java.util.Arrays;
 import java.util.List;
 import org.hbw.espresso.functor.Maybe;
 
-/**
- *
- * @author niles
- */
 public class EspressoLogger {
 
 	private static Maybe<EspressoJettyLogger> instance = new Maybe<>(null);
 
-	public static void Initialize(Object... files) {
+	public static void initialize(Object... files) {
 		if (!instance.isNothing()) {
 			EspressoLogger.warn("Tried to initalize an already-initialized logger");
 		} else {
@@ -27,7 +18,7 @@ public class EspressoLogger {
 
 	public static Maybe<EspressoJettyLogger> getInstance() {
 		if (instance.isNothing()) {
-			EspressoLogger.Initialize(System.out);
+			EspressoLogger.initialize(System.out);
 			EspressoLogger.warn("Tried to get instance without an initialized instance. Automatically creating one that logs to system.out");
 		}
 		return instance;
