@@ -23,6 +23,8 @@ public class EspressoHandler extends AbstractHandler {
 	@Override
 	public void handle(String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+		EspressoLogger.info(String.format("%s %s", request.getMethod(), uri));
+		
 		Maybe<HttpMethod> method = Router.toHttpMethod(request.getMethod());
 
 		Maybe<Route> route = router.getRoute(uri, method);
@@ -36,8 +38,6 @@ public class EspressoHandler extends AbstractHandler {
 	}
 
 	private void handleError(Integer errorCode, String uri, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		EspressoLogger.info(String.format("%s %s", request.getMethod(), uri));
 
 		Maybe<HttpMethod> method = Router.toHttpMethod(request.getMethod());
 
@@ -58,7 +58,7 @@ public class EspressoHandler extends AbstractHandler {
 
 		Response res = new Response(response);
 
-		Maybe<String> resp = router.executeRoute(route, uri, request, res);
+		Maybe<Object> resp = router.executeRoute(route, uri, request, res);
 
 		// Set status
 		response.setStatus(res.status());
@@ -75,7 +75,7 @@ public class EspressoHandler extends AbstractHandler {
 		} else {
 			resp.fmap(f -> {
 				try {
-					response.getWriter().println(f);
+					renderResponse(f, res, response);
 				} catch (IOException ex) {
 					EspressoLogger.warn(ex);
 				}
@@ -96,5 +96,17 @@ public class EspressoHandler extends AbstractHandler {
 		}));
 
 		executeHandler(errorRoute, uri, baseRequest, request, response);
+	}
+
+	private void renderResponse(Object f, Response res, HttpServletResponse response) throws IOException {
+		if (f instanceof Renderable) {
+			response.getWriter().write(((Renderable) f).render());
+		} else if (f instanceof String) {
+			response.getWriter().println(f);
+		} else if (f instanceof Response) {
+			response.getWriter().println(res.raw());
+		} else {
+			throw new IllegalArgumentException("Invalid response type");
+		}
 	}
 }

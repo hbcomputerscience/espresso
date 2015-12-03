@@ -76,7 +76,7 @@ public class Router {
 		});
 	}
 
-	public Maybe<String> executeRoute(Maybe<Route> route, String url, HttpServletRequest request, Response response) {
+	public Maybe<Object> executeRoute(Maybe<Route> route, String url, HttpServletRequest request, Response response) {
 		return route.fmap(r -> {
 			return r.getHandler().accept(new Request(request, r.extractParams(url)), response);
 		});

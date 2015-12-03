@@ -21,7 +21,7 @@ public class EspressoJettyLogger extends AbstractLogger {
 	String endl;
 
 	private void logMessage(String type, String message) {
-		String built = String.format("[%s %s %s] %s%s", ManagementFactory.getRuntimeMXBean().getName(), this.dateFormat.format(new Date()), type, message);
+		String built = String.format("[%s %s %s] %s", ManagementFactory.getRuntimeMXBean().getName(), this.dateFormat.format(new Date()), type, message);
 		for (OutputStream o : loggingList) {
 			try {
 				o.write(built.getBytes());

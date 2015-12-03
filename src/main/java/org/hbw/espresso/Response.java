@@ -13,6 +13,8 @@ public class Response {
 	private Integer status = 200;
 
 	private final Map<String, String> headers = new HashMap<>();
+	
+	private final StringBuilder buffer = new StringBuilder();
 
 	public Response(HttpServletResponse response) {
 		this.response = response;
@@ -48,7 +50,13 @@ public class Response {
 		return this;
 	}
 
+	public Response write(Object o) {
+		buffer.append(o);
+		
+		return this;
+	}
+	
 	public String raw() {
-		return "";
+		return buffer.toString();
 	}
 }
