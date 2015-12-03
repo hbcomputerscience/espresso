@@ -6,13 +6,13 @@ import java.util.List;
 import org.hbw.espresso.Handler;
 import org.hbw.espresso.http.HttpMethod;
 
-public class Route {
+public class Route<T> {
 
 	private final HttpMethod method;
 
 	private final String path;
 
-	private final Handler handler;
+	private final Handler<T> handler;
 
 	public boolean matchRoute(String url) {
 		List<String> p1 = Arrays.asList(path.split("/"));

@@ -1,6 +1,8 @@
 package org.hbw.espresso;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +17,7 @@ import org.hbw.espresso.logging.EspressoLogger;
 public class EspressoHandler extends AbstractHandler {
 
 	private final Router router;
-	
+
 	private final String version;
 
 	public EspressoHandler(String version, Router router) {
@@ -27,7 +29,7 @@ public class EspressoHandler extends AbstractHandler {
 	public void handle(String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 		EspressoLogger.info(String.format("%s %s", request.getMethod(), uri));
-		
+
 		Maybe<HttpMethod> method = Router.toHttpMethod(request.getMethod());
 
 		Maybe<Route> route = router.getRoute(uri, method);
@@ -37,7 +39,9 @@ public class EspressoHandler extends AbstractHandler {
 			return;
 		}
 
-		executeHandler(route, uri, baseRequest, request, response);
+		route.fmap(r -> {
+			executeHandler(r, uri, baseRequest, request, response);
+		});
 	}
 
 	private void handleError(Integer errorCode, String uri, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -51,36 +55,41 @@ public class EspressoHandler extends AbstractHandler {
 			return;
 		}
 
-		executeHandler(errorRoute, uri, baseRequest, request, response);
+		//executeHandler(errorRoute, uri, baseRequest, request, response);
 	}
 
-	private void executeHandler(Maybe<Route> route, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if (route.isNothing()) {
-			throw new IllegalArgumentException("Invalid route.");
+	private <T> void executeHandler(Route<T> route, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		Response res = new Response(httpServletResponse);
+
+		Maybe<Route<T>> resp = router.executeRoute(route, uri, httpServletRequest, res);
+
+		if (httpServletResponse.isCommitted()) {
+			baseRequest.setHandled(true);
+			return;
 		}
 
-		Response res = new Response(response);
-
-		Maybe<Object> resp = router.executeRoute(route, uri, request, res);
-
 		// Set status
-		response.setStatus(res.status());
+		httpServletResponse.setStatus(res.status());
 
 		// Set content type
-		response.setContentType(res.contentType());
+		httpServletResponse.setContentType(res.contentType());
 
 		// Set Headers
-		res.headers().forEach(response::setHeader);
+		res.headers().forEach(httpServletResponse::setHeader);
 
 		// Set body
 		if (resp.isNothing()) {
-			response.getWriter().println(res.body());
+			try {
+				httpServletResponse.getWriter().println(res.body());
+			} catch (IOException ex) {
+				
+			}
 		} else {
 			resp.fmap(f -> {
 				try {
-					renderResponse(f, res, response);
+					httpServletResponse.getWriter().write(f.toString());
 				} catch (IOException ex) {
-					EspressoLogger.warn(ex);
+
 				}
 			});
 		}
@@ -89,28 +98,16 @@ public class EspressoHandler extends AbstractHandler {
 	}
 
 	private void defaultErrorHandler(Integer errorCode, String uri, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		Maybe<Route> errorRoute = new Maybe<>(new Route(HttpMethod.ACTION, uri, (req, res) -> {
+		Route errorRoute = new Route(HttpMethod.ACTION, uri, (req, res) -> {
 			res.write("<html>");
 			res.write("<title>Error!</title>");
 			res.write(String.format("<h2>HTTP/1.1 Error: %d</h2>", errorCode));
 			res.write(String.format("<hr> Powered by %s", version));
 			res.write("</html>");
-			
+
 			return res;
-		}));
+		});
 
 		executeHandler(errorRoute, uri, baseRequest, request, response);
-	}
-
-	private void renderResponse(Object f, Response res, HttpServletResponse response) throws IOException {
-		if (f instanceof Renderable) {
-			response.getWriter().write(((Renderable) f).render());
-		} else if (f instanceof String) {
-			response.getWriter().println(f);
-		} else if (f instanceof Response) {
-			response.getWriter().println(res.body());
-		} else {
-			throw new IllegalArgumentException("Invalid response type");
-		}
 	}
 }

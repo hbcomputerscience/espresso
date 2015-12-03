@@ -1,8 +1,10 @@
 package org.hbw.espresso;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+import org.hbw.espresso.logging.EspressoLogger;
 
 public class Response {
 
@@ -73,6 +75,17 @@ public class Response {
 	}
 	
 	public Response redirect(String url) {
-		throw new UnsupportedOperationException("Redirect not implemented");
+		try {
+			response.sendRedirect(url);
+		} catch (IOException ex) {
+			EspressoLogger.warn(ex);
+		}
+		
+		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return body();
 	}
 }

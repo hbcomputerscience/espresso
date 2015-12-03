@@ -1,7 +1,7 @@
 package org.hbw.espresso;
 
 @FunctionalInterface
-public interface Handler {
+public interface Handler<T> {
 
-	public Object accept(Request req, Response res);
+	public T accept(Request req, Response res);
 }
