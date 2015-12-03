@@ -51,7 +51,7 @@ public class Router {
 	public Maybe<Route> getErrorRoute(Integer errorCode, Maybe<HttpMethod> method) {
 		return method.fmap(m -> {
 			if (errorRoutes.containsKey(errorCode)) {
-				for(Route route : errorRoutes.get(errorCode)) {
+				for (Route route : errorRoutes.get(errorCode)) {
 					if (route.getMethod().equals(HttpMethod.ACTION) || m.equals(route.getMethod())) {
 						return route;
 					}

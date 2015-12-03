@@ -232,13 +232,12 @@ public class Espresso {
 
 			server.setHandler(new EspressoHandler(router));
 			server.start();
-			
+
 			synchronized (lock) {
 				started = true;
-			}			
+			}
 			server.join();
-			
-			
+
 		} catch (Exception ex) {
 			EspressoLogger.warn(ex.toString());
 		}

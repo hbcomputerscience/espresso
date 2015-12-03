@@ -1,8 +1,5 @@
 package org.hbw.espresso.logging;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
@@ -24,17 +21,7 @@ public class EspressoJettyLogger extends AbstractLogger {
 	String endl;
 
 	private void logMessage(String type, String message) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("[");
-		builder.append(ManagementFactory.getRuntimeMXBean().getName());
-		builder.append(" ");
-		builder.append(this.dateFormat.format(new Date()));
-		builder.append(" ");
-		builder.append(type);
-		builder.append("] ");
-		builder.append(message);
-		builder.append(endl);
-		String built = builder.toString();
+		String built = String.format("[%s %s %s] %s%s", ManagementFactory.getRuntimeMXBean().getName(), this.dateFormat.format(new Date()), type, message);
 		for (OutputStream o : loggingList) {
 			try {
 				o.write(built.getBytes());

@@ -91,10 +91,10 @@ public class EspressoHandler extends AbstractHandler {
 			sb.append(String.format("<title>Error!</title>"));
 			sb.append(String.format("<h2>HTTP Error: %d</h2>", errorCode));
 			sb.append("<hr>Powered by Espresso.");
-			
+
 			return sb.toString();
 		}));
-		
+
 		executeHandler(errorRoute, uri, baseRequest, request, response);
 	}
 }
