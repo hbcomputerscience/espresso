@@ -14,7 +14,7 @@ public class Response {
 
 	private final Map<String, String> headers = new HashMap<>();
 	
-	private final StringBuilder buffer = new StringBuilder();
+	private StringBuilder buffer = new StringBuilder();
 
 	public Response(HttpServletResponse response) {
 		this.response = response;
@@ -56,7 +56,23 @@ public class Response {
 		return this;
 	}
 	
-	public String raw() {
+	public Response clear() {
+		buffer = new StringBuilder();
+		
+		return this;
+	}
+	
+	public Response body(String body) {
+		buffer = new StringBuilder(body);
+		
+		return this;
+	}
+	
+	public String body() {
 		return buffer.toString();
+	}
+	
+	public Response redirect(String url) {
+		throw new UnsupportedOperationException("Redirect not implemented");
 	}
 }

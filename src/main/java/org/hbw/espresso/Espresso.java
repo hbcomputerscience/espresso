@@ -12,6 +12,8 @@ public class Espresso {
 
 	private final Router router = new Router();
 
+	private final String version = "Espresso v0.0.1a";
+	
 	private Server server;
 
 	private Boolean started = false;
@@ -230,7 +232,7 @@ public class Espresso {
 		try {
 			server = new Server(port);
 
-			server.setHandler(new EspressoHandler(router));
+			server.setHandler(new EspressoHandler(version, router));
 			server.start();
 
 			synchronized (lock) {
