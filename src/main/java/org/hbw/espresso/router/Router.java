@@ -20,6 +20,11 @@ public class Router {
 
 	}
 
+    /**
+     * Converts string to an HttpMethod.
+     * @param method
+     * @return 
+     */
 	public static Maybe<HttpMethod> toHttpMethod(String method) {
 		HttpMethod httpMethod = null;
 
@@ -32,6 +37,11 @@ public class Router {
 		return new Maybe<>(httpMethod);
 	}
 
+    /**
+     * Defines a route to be used when an error is encountered.
+     * @param code
+     * @param route 
+     */
 	public void setErrorRoute(Integer code, Route route) {
 		if (!errorRoutes.containsKey(code)) {
 			errorRoutes.put(code, new ArrayList<>());
@@ -40,6 +50,10 @@ public class Router {
 		errorRoutes.get(code).add(route);
 	}
 
+    /**
+     * Adds a route to the router.
+     * @param route 
+     */
 	public void setRoute(Route route) {
 		routes.add(route);
 	}
@@ -48,20 +62,30 @@ public class Router {
 		setRoute(new Route(httpMethod, path, handler));
 	}
 
-	public Maybe<Route> getErrorRoute(Integer errorCode, Maybe<HttpMethod> method) {
-		return method.fmap(m -> {
-			if (errorRoutes.containsKey(errorCode)) {
-				for (Route route : errorRoutes.get(errorCode)) {
-					if (route.getMethod().equals(HttpMethod.ACTION) || m.equals(route.getMethod())) {
-						return route;
-					}
+    /**
+     * Finds an appropriate route for an error code.
+     * @param errorCode
+     * @param method
+     * @return 
+     */
+	public Maybe<Route> getErrorRoute(Integer errorCode, HttpMethod method) {
+		if (errorRoutes.containsKey(errorCode)) {
+			for (Route route : errorRoutes.get(errorCode)) {
+				if (route.getMethod().equals(HttpMethod.ACTION) || method.equals(route.getMethod())) {
+					return new Maybe(route);
 				}
 			}
+		}
 
-			return null;
-		});
+		return null;
 	}
 
+    /**
+     * Gets a route at a url.
+     * @param url
+     * @param method
+     * @return 
+     */
 	public Maybe<Route> getRoute(String url, Maybe<HttpMethod> method) {
 		return method.fmap(m -> {
 			for (Route route : routes) {
@@ -76,7 +100,16 @@ public class Router {
 		});
 	}
 
-	public <T> Maybe<Route<T>> executeRoute(Route<T> route, String url, HttpServletRequest request, Response response) {
+    /**
+     * Returns the result of the execution of a route.
+     * @param <T>
+     * @param route
+     * @param url
+     * @param request
+     * @param response
+     * @return 
+     */
+	public <T> Maybe<T> executeRoute(Route<T> route, String url, HttpServletRequest request, Response response) {
 		return new Maybe(route.getHandler().accept(new Request(request, route.extractParams(url)), response));
 	}
 }
