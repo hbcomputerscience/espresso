@@ -10,7 +10,6 @@ import java.util.function.Function;
 public interface Functor<T> {
 
 	/**
-	 *
 	 * @param <T2>
 	 * @param f
 	 * @return

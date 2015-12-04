@@ -17,7 +17,7 @@ public class Maybe<T> implements Functor<T> {
 	}
 
 	/**
-	 * Returns whether the value of the maybe is nothing
+	 * Returns false if the Maybe is Nothing, otherwise returns true
 	 *
 	 * @return boolean isNothing
 	 */
@@ -26,7 +26,7 @@ public class Maybe<T> implements Functor<T> {
 	}
 
 	/**
-	 * Returns x if value is null, otherwise returns value.
+	 * Returns x if the value is null, otherwise returns the non-encapsulated value;
 	 *
 	 * @param x
 	 * @return
@@ -36,7 +36,7 @@ public class Maybe<T> implements Functor<T> {
 	}
 
 	/**
-	 * Converts the maybe to a human readable string.
+	 * toString method
 	 *
 	 * @return String humanReadableMaybe
 	 */
@@ -46,10 +46,9 @@ public class Maybe<T> implements Functor<T> {
 	}
 
 	/**
-	 * Takes a function that takes a parameter of the type T, which is the same
-	 * type as the value of the maybe and, if the value of the maybe is not
-	 * nothing, returns a new maybe containing the return value of the function
-	 * called with the value of the maybe.
+	 * Returns the result of a function called on the value encapsulated in Maybe.
+     * fmap(f, Maybe x) = Maybe f (x)
+     * fmap(f, Nothing) = Nothing
 	 *
 	 * @param <T2>
 	 * @param f
