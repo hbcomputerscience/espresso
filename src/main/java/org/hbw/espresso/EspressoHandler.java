@@ -55,7 +55,9 @@ public class EspressoHandler extends AbstractHandler {
 			return;
 		}
 
-		//executeHandler(errorRoute, uri, baseRequest, request, response);
+		errorRoute.fmap(route -> {
+			executeHandler(route, uri, baseRequest, request, response);
+		});
 	}
 
 	private <T> void executeHandler(Route<T> route, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
@@ -82,14 +84,14 @@ public class EspressoHandler extends AbstractHandler {
 			try {
 				httpServletResponse.getWriter().println(res.body());
 			} catch (IOException ex) {
-				
+				EspressoLogger.warn(ex);
 			}
 		} else {
 			resp.fmap(f -> {
 				try {
 					httpServletResponse.getWriter().write(f.toString());
 				} catch (IOException ex) {
-
+					EspressoLogger.warn(ex);
 				}
 			});
 		}
