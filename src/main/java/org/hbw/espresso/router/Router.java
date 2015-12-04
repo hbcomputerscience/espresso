@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.hbw.espresso.Handler;
-import org.hbw.espresso.Request;
-import org.hbw.espresso.Response;
 import org.hbw.espresso.functor.Maybe;
 import org.hbw.espresso.http.HttpMethod;
+import org.hbw.espresso.wrappers.Request;
+import org.hbw.espresso.wrappers.Response;
 
 public class Router {
 
@@ -77,7 +77,7 @@ public class Router {
 			}
 		}
 
-		return null;
+		return new Maybe(null);
 	}
 
     /**

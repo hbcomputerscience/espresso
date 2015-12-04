@@ -1,18 +1,19 @@
 package org.hbw.espresso;
 
+import org.hbw.espresso.wrappers.Response;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.hbw.espresso.functor.Maybe;
 import org.hbw.espresso.http.HttpMethod;
 import org.hbw.espresso.router.Router;
 import org.hbw.espresso.router.Route;
 import org.hbw.espresso.logging.EspressoLogger;
 
-public class EspressoHandler extends AbstractHandler {
+public class EspressoHandler extends SessionHandler {
 
 	private final Router router;
 
@@ -24,7 +25,7 @@ public class EspressoHandler extends AbstractHandler {
 	}
 
 	@Override
-	public void handle(String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public void doHandle(String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 		EspressoLogger.info(String.format("%s %s", request.getMethod(), uri));
 
@@ -46,22 +47,25 @@ public class EspressoHandler extends AbstractHandler {
 
 		Maybe<HttpMethod> method = Router.toHttpMethod(request.getMethod());
 
-		Maybe<Route> errorRoute = router.getErrorRoute(errorCode, method);
+		method.fmap(m -> {
+			Maybe<Route> errorRoute = router.getErrorRoute(errorCode, m);
 
-		if (errorRoute.isNothing()) {
-			defaultErrorHandler(errorCode, uri, baseRequest, request, response);
-			return;
-		}
+			if (errorRoute.isNothing()) {
+				defaultErrorHandler(errorCode, uri, baseRequest, request, response);
+				return;
+			}
 
-		errorRoute.fmap(route -> {
-			executeHandler(route, uri, baseRequest, request, response);
+			errorRoute.fmap(route -> {
+				executeHandler(route, uri, baseRequest, request, response);
+			});
 		});
+
 	}
 
 	private <T> void executeHandler(Route<T> route, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		Response res = new Response(httpServletResponse);
 
-		Maybe<Route<T>> resp = router.executeRoute(route, uri, httpServletRequest, res);
+		Maybe<T> resp = router.executeRoute(route, uri, httpServletRequest, res);
 
 		if (httpServletResponse.isCommitted()) {
 			baseRequest.setHandled(true);
@@ -97,7 +101,7 @@ public class EspressoHandler extends AbstractHandler {
 		baseRequest.setHandled(true);
 	}
 
-	private void defaultErrorHandler(Integer errorCode, String uri, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void defaultErrorHandler(Integer errorCode, String uri, Request baseRequest, HttpServletRequest request, HttpServletResponse response) {
 		Route errorRoute = new Route(HttpMethod.ACTION, uri, (req, res) -> {
 			res.write("<html>");
 			res.write("<title>Error!</title>");

@@ -1,4 +1,4 @@
-package org.hbw.espresso;
+package org.hbw.espresso.wrappers;
 
 import java.io.IOException;
 import java.util.HashMap;

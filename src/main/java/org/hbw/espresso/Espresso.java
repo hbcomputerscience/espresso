@@ -2,6 +2,9 @@ package org.hbw.espresso;
 
 import org.hbw.espresso.logging.EspressoLogger;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.session.HashSessionIdManager;
+import org.eclipse.jetty.server.session.HashSessionManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.util.log.Log;
 import org.hbw.espresso.http.HttpMethod;
 import org.hbw.espresso.router.Route;
@@ -232,7 +235,17 @@ public class Espresso {
 		try {
 			server = new Server(port);
 
-			server.setHandler(new EspressoHandler(version, router));
+			HashSessionIdManager sessionIdManager = new HashSessionIdManager();
+			server.setSessionIdManager(sessionIdManager);
+			
+			HashSessionManager manager = new HashSessionManager();
+			SessionHandler sessions = new SessionHandler(manager);
+			
+			EspressoHandler handler = new EspressoHandler(version, router);
+			
+			handler.setHandler(sessions);
+			
+			server.setHandler(handler);
 			server.start();
 
 			synchronized (lock) {
