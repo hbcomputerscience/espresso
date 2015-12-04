@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.eclipse.jetty.util.log.AbstractLogger;
-import org.eclipse.jetty.util.log.JavaUtilLog;
+//import org.eclipse.jetty.util.log.JavaUtilLog;
 import org.eclipse.jetty.util.log.Logger;
 
 public class EspressoJettyLogger extends AbstractLogger {
@@ -74,7 +74,8 @@ public class EspressoJettyLogger extends AbstractLogger {
 	 */
 	@Override
 	protected Logger newLogger(String string) {
-		return new JavaUtilLog(string);
+		return this;
+		//return new JavaUtilLog(string);
 	}
 
 	/**
