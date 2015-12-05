@@ -1,8 +1,11 @@
 package org.hbw.espresso.wrappers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.hbw.espresso.logging.EspressoLogger;
 
@@ -13,6 +16,8 @@ public class Response {
 	private String contentType = "text/html;charset=utf-8";
 
 	private Integer status = 200;
+	
+	private final List<Cookie> cookies = new ArrayList<>();
 
 	private final Map<String, String> headers = new HashMap<>();
 	
@@ -51,7 +56,41 @@ public class Response {
 
 		return this;
 	}
+	
+	public List<Cookie> cookies() {
+		return cookies;
+	}
 
+	public Cookie cookie(String name, String value) {
+		Cookie cookie = new Cookie(name, value);
+		
+		cookie(cookie);
+		
+		return cookie;
+	}
+	
+	public Response cookie(Cookie cookie) {
+		cookies.add(cookie);
+		
+		return this;
+	}
+	
+	public Response deleteCookie(Cookie cookie) {
+		return deleteCookie(cookie.getName());
+	} 
+	
+	public Response deleteCookie(String name) {
+		for(int i = 0; i < cookies.size(); i++) {
+			if (cookies.get(i).getName().equals(name)) {
+				cookies.remove(i);
+			}
+		}
+		
+		cookie(name, "").setMaxAge(0);
+		
+		return this;
+	}
+	
 	public Response write(Object o) {
 		buffer.append(o);
 		

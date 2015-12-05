@@ -80,6 +80,9 @@ public class EspressoHandler extends SessionHandler {
 
 		// Set Headers
 		res.headers().forEach(httpServletResponse::setHeader);
+		
+		// Set Cookies
+		res.cookies().forEach(httpServletResponse::addCookie);
 
 		// Set body
 		if (resp.isNothing()) {
