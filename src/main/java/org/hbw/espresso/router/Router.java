@@ -109,7 +109,7 @@ public class Router {
      * @param response
      * @return 
      */
-	public <T> Maybe<T> executeRoute(Route<T> route, String url, HttpServletRequest request, Response response) {
-		return new Maybe(route.getHandler().accept(new Request(request, route.extractParams(url)), response));
+	public <T> Maybe<T> executeRoute(Route<T> route, String url, Request request, Response response) {
+		return new Maybe(route.getHandler().accept(request, response));
 	}
 }

@@ -229,7 +229,7 @@ public class Espresso {
 
 		EspressoLogger.initialize(System.out);
 		EspressoLogger.getInstance().fmap(f -> {
-			Log.setLog(f);
+			//Log.setLog(f);
 		});
 
 		try {

@@ -5,13 +5,13 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.hbw.espresso.functor.Maybe;
 import org.hbw.espresso.http.HttpMethod;
 import org.hbw.espresso.router.Router;
 import org.hbw.espresso.router.Route;
 import org.hbw.espresso.logging.EspressoLogger;
+import org.hbw.espresso.wrappers.Request;
 
 public class EspressoHandler extends SessionHandler {
 
@@ -43,7 +43,7 @@ public class EspressoHandler extends SessionHandler {
 		});
 	}
 
-	private void handleError(Integer errorCode, String uri, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void handleError(Integer errorCode, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		Maybe<HttpMethod> method = Router.toHttpMethod(request.getMethod());
 
@@ -63,9 +63,11 @@ public class EspressoHandler extends SessionHandler {
 	}
 
 	private <T> void executeHandler(Route<T> route, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-		Response res = new Response(httpServletResponse);
+		
+		Request req = new Request(httpServletRequest, route.extractParams(uri));
+		Response res = new Response(httpServletResponse, req.cookies());
 
-		Maybe<T> resp = router.executeRoute(route, uri, httpServletRequest, res);
+		Maybe<T> resp = router.executeRoute(route, uri, req, res);
 
 		if (httpServletResponse.isCommitted()) {
 			baseRequest.setHandled(true);
@@ -104,7 +106,7 @@ public class EspressoHandler extends SessionHandler {
 		baseRequest.setHandled(true);
 	}
 
-	private void defaultErrorHandler(Integer errorCode, String uri, Request baseRequest, HttpServletRequest request, HttpServletResponse response) {
+	private void defaultErrorHandler(Integer errorCode, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest request, HttpServletResponse response) {
 		Route errorRoute = new Route(HttpMethod.ACTION, uri, (req, res) -> {
 			res.write("<html>");
 			res.write("<title>Error!</title>");

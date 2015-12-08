@@ -2,11 +2,13 @@ package org.hbw.espresso.wrappers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import org.hbw.espresso.functor.Maybe;
 import org.hbw.espresso.logging.EspressoLogger;
 
 public class Response {
@@ -17,14 +19,15 @@ public class Response {
 
 	private Integer status = 200;
 	
-	private final List<Cookie> cookies = new ArrayList<>();
+	private final List<Cookie> cookies;
 
 	private final Map<String, String> headers = new HashMap<>();
 	
 	private StringBuilder buffer = new StringBuilder();
 
-	public Response(HttpServletResponse response) {
+	public Response(HttpServletResponse response, Cookie[] cookies) {
 		this.response = response;
+		this.cookies = new ArrayList<>(Arrays.asList(cookies));
 	}
 
 	public String contentType() {
@@ -59,6 +62,16 @@ public class Response {
 	
 	public List<Cookie> cookies() {
 		return cookies;
+	}
+	
+	public Maybe<Cookie> cookie(String name) {
+		for(Cookie cookie : cookies) {
+			if (cookie.getName().equals(name)) {
+				return new Maybe(cookie);
+			}
+		}
+		
+		return new Maybe(null);
 	}
 
 	public Cookie cookie(String name, String value) {
