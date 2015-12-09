@@ -65,7 +65,7 @@ public class EspressoHandler extends SessionHandler {
 	private <T> void executeHandler(Route<T> route, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		
 		Request req = new Request(httpServletRequest, route.extractParams(uri));
-		Response res = new Response(httpServletResponse, req.cookies());
+		Response res = new Response(httpServletResponse);
 
 		Maybe<T> resp = router.executeRoute(route, uri, req, res);
 
@@ -73,18 +73,10 @@ public class EspressoHandler extends SessionHandler {
 			baseRequest.setHandled(true);
 			return;
 		}
-
-		// Set status
-		httpServletResponse.setStatus(res.status());
-
-		// Set content type
-		httpServletResponse.setContentType(res.contentType());
-
-		// Set Headers
-		res.headers().forEach(httpServletResponse::setHeader);
 		
-		// Set Cookies
-		res.cookies().forEach(httpServletResponse::addCookie);
+		if (res.contentType().isNothing()) {
+			httpServletResponse.setContentType(Response.defaultContentType());
+		}
 
 		// Set body
 		if (resp.isNothing()) {

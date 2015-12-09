@@ -1,10 +1,7 @@
 package org.hbw.espresso.wrappers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -14,64 +11,31 @@ import org.hbw.espresso.logging.EspressoLogger;
 public class Response {
 
 	private final HttpServletResponse response;
-
-	private String contentType = "text/html;charset=utf-8";
-
-	private Integer status = 200;
 	
-	private final List<Cookie> cookies;
+	private static final String defaultContentType = "text/html;charset=utf-8";
 
-	private final Map<String, String> headers = new HashMap<>();
-	
 	private StringBuilder buffer = new StringBuilder();
 
-	public Response(HttpServletResponse response, Cookie[] cookies) {
+	public Response(HttpServletResponse response) {
 		this.response = response;
-		this.cookies = new ArrayList<>(Arrays.asList(cookies));
 	}
-
-	public String contentType() {
-		return contentType;
-	}
-
+	
 	public Response contentType(String contentType) {
-		this.contentType = contentType;
-
+		response.setContentType(contentType);
+		
 		return this;
-	}
-
-	public Integer status() {
-		return status;
 	}
 
 	public Response status(Integer status) {
-		this.status = status;
-
+		response.setStatus(status);
+		
 		return this;
-	}
-
-	public Map<String, String> headers() {
-		return headers;
 	}
 
 	public Response header(String key, String value) {
-		headers.put(key, value);
+		response.setHeader(key, value);
 
 		return this;
-	}
-	
-	public List<Cookie> cookies() {
-		return cookies;
-	}
-	
-	public Maybe<Cookie> cookie(String name) {
-		for(Cookie cookie : cookies) {
-			if (cookie.getName().equals(name)) {
-				return new Maybe(cookie);
-			}
-		}
-		
-		return new Maybe(null);
 	}
 
 	public Cookie cookie(String name, String value) {
@@ -83,7 +47,7 @@ public class Response {
 	}
 	
 	public Response cookie(Cookie cookie) {
-		cookies.add(cookie);
+		response.addCookie(cookie);
 		
 		return this;
 	}
@@ -93,12 +57,6 @@ public class Response {
 	} 
 	
 	public Response deleteCookie(String name) {
-		for(int i = 0; i < cookies.size(); i++) {
-			if (cookies.get(i).getName().equals(name)) {
-				cookies.remove(i);
-			}
-		}
-		
 		cookie(name, "").setMaxAge(0);
 		
 		return this;
@@ -134,6 +92,18 @@ public class Response {
 		}
 		
 		return this;
+	}
+	
+	public HttpServletResponse raw() {
+		return response;
+	}
+	
+	public Maybe<String> contentType() {
+		return new Maybe<>(response.getContentType());
+	}
+
+	public static String defaultContentType() {
+		return defaultContentType;
 	}
 	
 	@Override
