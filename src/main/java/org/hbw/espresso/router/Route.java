@@ -2,6 +2,7 @@ package org.hbw.espresso.router;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import org.hbw.espresso.Handler;
 import org.hbw.espresso.http.HttpMethod;
@@ -40,14 +41,14 @@ public class Route<T> {
      * @param url
      * @return 
      */
-	public List<String> extractParams(String url) {
-		List<String> vars = new ArrayList();
+	public HashMap<String,String> extractParams(String url) {
+        HashMap<String, String> vars = new HashMap();
 		List<String> p1 = Arrays.asList(path.split("/"));
 		List<String> p2 = Arrays.asList(url.split("/"));
 
 		for (int i = 0; i < p1.size(); i++) {
 			if (p1.get(i).length() > 0 && p1.get(i).charAt(0) == ':') {
-				vars.add(p2.get(i));
+				vars.put(p1.get(i), p2.get(i));
 			}
 		}
 
