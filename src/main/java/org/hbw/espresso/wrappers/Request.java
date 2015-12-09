@@ -3,6 +3,7 @@ package org.hbw.espresso.wrappers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,9 @@ public class Request {
 
 	private final HttpServletRequest request;
 
-	private final List<String> params;
+	private final List<String> uriParameters;
+	
+	private final List<String> parameters = new ArrayList<>();
 	
 	private Maybe<Session> session = new Maybe<>(null);
 	
@@ -26,13 +29,18 @@ public class Request {
 	public Request(HttpServletRequest request, List<String> extractParams) {
 		this.request = request;
 		
-		this.params = extractParams;
+		this.uriParameters = extractParams;
+		
+		Enumeration<String> names = request.getParameterNames();
+		while(names.hasMoreElements()) {
+			parameters.add(request.getParameter(names.nextElement()));
+		}
 		
 		this.cookies = new ArrayList<>(Arrays.asList(request.getCookies()));
 	}
 
-	public List<String> parameters() {
-		return params;
+	public List<String> uriParameters() {
+		return uriParameters;
 	}
 	
 	public Session session() {
@@ -82,6 +90,10 @@ public class Request {
 		}
 		
 		return new Maybe<>(null);
+	}
+	
+	public List<String> parameters() {
+		return parameters;
 	}
 	
 	public Maybe<String> parameter(String key) {
