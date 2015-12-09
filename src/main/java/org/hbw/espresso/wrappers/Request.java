@@ -16,7 +16,7 @@ public class Request {
 
 	private final HttpServletRequest request;
 
-	private final List<String> uriParameters;
+	private final Map<String, String> uriParameters;
 	
 	private final List<String> parameters = new ArrayList<>();
 	
@@ -26,7 +26,7 @@ public class Request {
 	
 	private Maybe<Map<String, String>> cookieValuesMap = new Maybe<>(null);
 
-	public Request(HttpServletRequest request, List<String> extractParams) {
+	public Request(HttpServletRequest request, Map<String, String> extractParams) {
 		this.request = request;
 		
 		this.uriParameters = extractParams;
@@ -39,8 +39,17 @@ public class Request {
 		this.cookies = new ArrayList<>(Arrays.asList(request.getCookies()));
 	}
 
-	public List<String> uriParameters() {
+	public Map<String, String> uriParameters() {
 		return uriParameters;
+	}
+	
+	public Maybe<String> uriParameter(String name) {
+		//null will stored inside a maybe, so it is typesafe.
+		return new Maybe<>(uriParameters.getOrDefault(name, null));
+	}
+	
+	public Maybe<String> uriParameter(String name, String defaultValue) {
+		return new Maybe<>(uriParameters.getOrDefault(name, defaultValue));
 	}
 	
 	public Session session() {
