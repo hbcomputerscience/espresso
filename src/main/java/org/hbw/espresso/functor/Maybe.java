@@ -26,7 +26,8 @@ public class Maybe<T> implements Functor<T> {
 	}
 
 	/**
-	 * Returns x if the value is null, otherwise returns the non-encapsulated value;
+	 * Returns x if the value is null, otherwise returns the
+	 * non-encapsulated value;
 	 *
 	 * @param x
 	 * @return
@@ -46,14 +47,13 @@ public class Maybe<T> implements Functor<T> {
 	}
 
 	/**
-	 * Returns the result of a function called on the value encapsulated in Maybe.
-     * fmap(f, Maybe x) = Maybe f (x)
-     * fmap(f, Nothing) = Nothing
+	 * Returns the result of a function called on the value encapsulated in
+	 * Maybe. fmap(f, Maybe x) = Maybe f (x) fmap(f, Nothing) = Nothing
 	 *
 	 * @param <T2>
 	 * @param f
-	 * @return new maybe with the value of the return value of f called with the
-	 * argument of the value of the maybe
+	 * @return new maybe with the value of the return value of f called with
+	 * the argument of the value of the maybe
 	 */
 	@Override
 	public <T2> Maybe<T2> fmap(Function<T, T2> f) {

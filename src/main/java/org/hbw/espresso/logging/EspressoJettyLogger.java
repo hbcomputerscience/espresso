@@ -20,13 +20,13 @@ public class EspressoJettyLogger extends AbstractLogger {
 	 */
 	protected DateFormat dateFormat;
 	/**
-	 * Instance variable that contains all OutputStreams that should be logged
-	 * to.
+	 * Instance variable that contains all OutputStreams that should be
+	 * logged to.
 	 */
 	private final List<OutputStream> loggingList = new ArrayList<>();
 	/**
-	 * Instance variable that notes whether debug messages should be logged or
-	 * ignored.
+	 * Instance variable that notes whether debug messages should be logged
+	 * or ignored.
 	 */
 	protected Boolean debug;
 	/**
@@ -35,9 +35,9 @@ public class EspressoJettyLogger extends AbstractLogger {
 	String endl;
 
 	/**
-	 * Takes a type and a message and generates a string containing the current
-	 * pid, time and date, type, message, then writes that string to every
-	 * OutputStream in loggingList.
+	 * Takes a type and a message and generates a string containing the
+	 * current pid, time and date, type, message, then writes that string to
+	 * every OutputStream in loggingList.
 	 *
 	 * @param type
 	 * @param message
@@ -147,7 +147,8 @@ public class EspressoJettyLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Logs an info message using the string string than the exception thrwbl.
+	 * Logs an info message using the string string than the exception
+	 * thrwbl.
 	 *
 	 * @param string
 	 * @param thrwbl
@@ -204,7 +205,8 @@ public class EspressoJettyLogger extends AbstractLogger {
 	}
 
 	/**
-	 * Logs a debug message with the message string and the exception thrwbl.
+	 * Logs a debug message with the message string and the exception
+	 * thrwbl.
 	 *
 	 * @param string
 	 * @param thrwbl

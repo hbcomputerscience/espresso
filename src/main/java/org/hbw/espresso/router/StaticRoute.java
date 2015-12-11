@@ -19,7 +19,7 @@ public class StaticRoute extends Route {
 				return "Error 404"; // Change this soon
 			} catch (URISyntaxException e) {
 				EspressoLogger.warn("Possible directory traversal attack on URI "
-					+ e.getInput());
+				    + e.getInput());
 				return "An error occured";
 			} catch (IOException e) {
 				return "An error occured";

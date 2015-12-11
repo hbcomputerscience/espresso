@@ -15,11 +15,12 @@ public class Route<T> {
 
 	private final Handler<T> handler;
 
-    /**
-     * Tests if a url matches the route.
-     * @param url
-     * @return 
-     */
+	/**
+	 * Tests if a url matches the route.
+	 *
+	 * @param url
+	 * @return
+	 */
 	public boolean matchRoute(String url) {
 		List<String> p1 = Arrays.asList(path.split("/"));
 		List<String> p2 = Arrays.asList(url.split("/"));
@@ -36,13 +37,14 @@ public class Route<T> {
 		return true;
 	}
 
-    /**
-     * Extracts the parameters supplied by the request to the server.
-     * @param url
-     * @return 
-     */
-	public HashMap<String,String> extractParams(String url) {
-        HashMap<String, String> vars = new HashMap();
+	/**
+	 * Extracts the parameters supplied by the request to the server.
+	 *
+	 * @param url
+	 * @return
+	 */
+	public HashMap<String, String> extractParams(String url) {
+		HashMap<String, String> vars = new HashMap();
 		List<String> p1 = Arrays.asList(path.split("/"));
 		List<String> p2 = Arrays.asList(url.split("/"));
 

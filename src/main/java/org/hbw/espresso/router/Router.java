@@ -20,11 +20,12 @@ public class Router {
 
 	}
 
-    /**
-     * Converts string to an HttpMethod.
-     * @param method
-     * @return 
-     */
+	/**
+	 * Converts string to an HttpMethod.
+	 *
+	 * @param method
+	 * @return
+	 */
 	public static Maybe<HttpMethod> toHttpMethod(String method) {
 		HttpMethod httpMethod = null;
 
@@ -37,11 +38,12 @@ public class Router {
 		return new Maybe<>(httpMethod);
 	}
 
-    /**
-     * Defines a route to be used when an error is encountered.
-     * @param code
-     * @param route 
-     */
+	/**
+	 * Defines a route to be used when an error is encountered.
+	 *
+	 * @param code
+	 * @param route
+	 */
 	public void setErrorRoute(Integer code, Route route) {
 		if (!errorRoutes.containsKey(code)) {
 			errorRoutes.put(code, new ArrayList<>());
@@ -50,10 +52,11 @@ public class Router {
 		errorRoutes.get(code).add(route);
 	}
 
-    /**
-     * Adds a route to the router.
-     * @param route 
-     */
+	/**
+	 * Adds a route to the router.
+	 *
+	 * @param route
+	 */
 	public void setRoute(Route route) {
 		routes.add(route);
 	}
@@ -62,12 +65,13 @@ public class Router {
 		setRoute(new Route(httpMethod, path, handler));
 	}
 
-    /**
-     * Finds an appropriate route for an error code.
-     * @param errorCode
-     * @param method
-     * @return 
-     */
+	/**
+	 * Finds an appropriate route for an error code.
+	 *
+	 * @param errorCode
+	 * @param method
+	 * @return
+	 */
 	public Maybe<Route> getErrorRoute(Integer errorCode, HttpMethod method) {
 		if (errorRoutes.containsKey(errorCode)) {
 			for (Route route : errorRoutes.get(errorCode)) {
@@ -80,12 +84,13 @@ public class Router {
 		return new Maybe(null);
 	}
 
-    /**
-     * Gets a route at a url.
-     * @param url
-     * @param method
-     * @return 
-     */
+	/**
+	 * Gets a route at a url.
+	 *
+	 * @param url
+	 * @param method
+	 * @return
+	 */
 	public Maybe<Route> getRoute(String url, Maybe<HttpMethod> method) {
 		return method.fmap(m -> {
 			for (Route route : routes) {
@@ -100,15 +105,16 @@ public class Router {
 		});
 	}
 
-    /**
-     * Returns the result of the execution of a route.
-     * @param <T>
-     * @param route
-     * @param url
-     * @param request
-     * @param response
-     * @return 
-     */
+	/**
+	 * Returns the result of the execution of a route.
+	 *
+	 * @param <T>
+	 * @param route
+	 * @param url
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	public <T> Maybe<T> executeRoute(Route<T> route, String url, Request request, Response response) {
 		return new Maybe(route.getHandler().accept(request, response));
 	}

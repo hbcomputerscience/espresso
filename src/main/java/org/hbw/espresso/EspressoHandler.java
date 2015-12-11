@@ -63,7 +63,7 @@ public class EspressoHandler extends SessionHandler {
 	}
 
 	private <T> void executeHandler(Route<T> route, String uri, org.eclipse.jetty.server.Request baseRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-		
+
 		Request req = new Request(httpServletRequest, route.extractParams(uri));
 		Response res = new Response(httpServletResponse);
 
@@ -73,7 +73,7 @@ public class EspressoHandler extends SessionHandler {
 			baseRequest.setHandled(true);
 			return;
 		}
-		
+
 		if (res.contentType().isNothing()) {
 			httpServletResponse.setContentType(Response.defaultContentType());
 		}

@@ -5,24 +5,24 @@ import javax.servlet.http.HttpSession;
 import org.hbw.espresso.functor.Maybe;
 
 public class Session {
-	
+
 	private final HttpSession session;
-	
+
 	public Session(HttpSession session) {
 		this.session = session;
 	}
-	
+
 	public <T> Maybe<T> get(String name) {
 		return new Maybe<>((T) session.getAttribute(name));
 	}
-	
+
 	public <T> T get(String name, T defaultValue) {
 		return (T) get(name).maybe(defaultValue);
 	}
-	
+
 	public Session set(String name, Object value) {
 		session.setAttribute(name, value);
-		
+
 		return this;
 	}
 
@@ -40,7 +40,7 @@ public class Session {
 
 	public Session maxInactiveInterval(int i) {
 		session.setMaxInactiveInterval(i);
-		
+
 		return this;
 	}
 
@@ -54,7 +54,7 @@ public class Session {
 
 	public Session remove(String string) {
 		session.removeAttribute(string);
-		
+
 		return this;
 	}
 
@@ -65,7 +65,7 @@ public class Session {
 	public boolean isNew() {
 		return session.isNew();
 	}
-	
+
 	public HttpSession raw() {
 		return session;
 	}

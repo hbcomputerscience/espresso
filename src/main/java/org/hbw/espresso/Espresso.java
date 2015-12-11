@@ -16,7 +16,7 @@ public class Espresso {
 	private final Router router = new Router();
 
 	private final String version = "Espresso v0.0.1a";
-	
+
 	private Server server;
 
 	private Boolean started = false;
@@ -237,14 +237,14 @@ public class Espresso {
 
 			HashSessionIdManager sessionIdManager = new HashSessionIdManager();
 			server.setSessionIdManager(sessionIdManager);
-			
+
 			HashSessionManager manager = new HashSessionManager();
 			SessionHandler sessions = new SessionHandler(manager);
-			
+
 			EspressoHandler handler = new EspressoHandler(version, router);
-			
+
 			handler.setHandler(sessions);
-			
+
 			server.setHandler(handler);
 			server.start();
 

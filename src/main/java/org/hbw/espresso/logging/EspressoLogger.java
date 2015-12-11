@@ -8,16 +8,16 @@ import org.hbw.espresso.functor.Maybe;
 public class EspressoLogger {
 
 	/**
-	 * Initially sets the private static variable instance to a maybe with the
-	 * value nothing.
+	 * Initially sets the private static variable instance to a maybe with
+	 * the value nothing.
 	 */
 	private static Maybe<EspressoJettyLogger> instance = new Maybe<>(null);
 
 	/**
 	 * Takes a number of OutputStreams that it passes to the constructor of
 	 * EspressoJettyLogger to create an instance of the jetty logger, unless
-	 * it's not the first time that it's been called, in which case it logs a
-	 * warning.
+	 * it's not the first time that it's been called, in which case it logs
+	 * a warning.
 	 *
 	 * @param files
 	 */
@@ -51,8 +51,8 @@ public class EspressoLogger {
 	}
 
 	/**
-	 * If instance is set it logs a warning with the message string, otherwise
-	 * getInstance creates a default logger to log the message.
+	 * If instance is set it logs a warning with the message string,
+	 * otherwise getInstance creates a default logger to log the message.
 	 *
 	 * @param string
 	 * @param os
@@ -64,8 +64,9 @@ public class EspressoLogger {
 	}
 
 	/**
-	 * If instance is set it logs a warning with a message derived from thrwbl,
-	 * otherwise getInstance creates a default logger to log the message.
+	 * If instance is set it logs a warning with a message derived from
+	 * thrwbl, otherwise getInstance creates a default logger to log the
+	 * message.
 	 *
 	 * @param thrwbl
 	 */
@@ -76,9 +77,9 @@ public class EspressoLogger {
 	}
 
 	/**
-	 * If instance is set it logs a warning with a message derived from string
-	 * and thrwbl, otherwise getInstance creates a default logger to log the
-	 * message.
+	 * If instance is set it logs a warning with a message derived from
+	 * string and thrwbl, otherwise getInstance creates a default logger to
+	 * log the message.
 	 *
 	 * @param string
 	 * @param thrwbl
@@ -105,8 +106,8 @@ public class EspressoLogger {
 
 	/**
 	 * If instance is set it logs an informational message with a message
-	 * derived from thrwbl, otherwise getInstance creates a default logger to
-	 * log the message.
+	 * derived from thrwbl, otherwise getInstance creates a default logger
+	 * to log the message.
 	 *
 	 * @param thrwbl
 	 */
@@ -118,8 +119,8 @@ public class EspressoLogger {
 
 	/**
 	 * If instance is set it logs an informational message with a message
-	 * derived from string and , otherwise getInstance creates a default logger
-	 * to log the message.
+	 * derived from string and , otherwise getInstance creates a default
+	 * logger to log the message.
 	 *
 	 * @param string
 	 * @param thrwbl
@@ -131,8 +132,8 @@ public class EspressoLogger {
 	}
 
 	/**
-	 * If instance is set it returns a maybe with the value of debug, otherwise
-	 * getInstance creates a default logger
+	 * If instance is set it returns a maybe with the value of debug,
+	 * otherwise getInstance creates a default logger
 	 *
 	 * @return Maybe with the value debug
 	 */
@@ -143,8 +144,8 @@ public class EspressoLogger {
 	}
 
 	/**
-	 * If instance is set it sets debug, otherwise getInstance creates a default
-	 * logger then sets the debug value of that.
+	 * If instance is set it sets debug, otherwise getInstance creates a
+	 * default logger then sets the debug value of that.
 	 *
 	 * @param bln
 	 */
@@ -169,9 +170,9 @@ public class EspressoLogger {
 	}
 
 	/**
-	 * If instance is set it logs a debug message with a message derived from
-	 * the exception thrwbl, otherwise getInstance creates a default logger to
-	 * log the message.
+	 * If instance is set it logs a debug message with a message derived
+	 * from the exception thrwbl, otherwise getInstance creates a default
+	 * logger to log the message.
 	 *
 	 * @param thrwbl
 	 */
@@ -182,9 +183,9 @@ public class EspressoLogger {
 	}
 
 	/**
-	 * If instance is set it logs a debug message with a message derived from
-	 * the exception thrwbl and the string string, otherwise getInstance creates
-	 * a default logger to log the message.
+	 * If instance is set it logs a debug message with a message derived
+	 * from the exception thrwbl and the string string, otherwise
+	 * getInstance creates a default logger to log the message.
 	 *
 	 * @param string
 	 * @param thrwbl
