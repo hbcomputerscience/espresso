@@ -2,6 +2,8 @@ package org.hbw.espresso;
 
 import org.hbw.espresso.wrappers.Response;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,15 +33,21 @@ public class EspressoHandler extends SessionHandler {
 
 		Maybe<HttpMethod> method = Router.toHttpMethod(request.getMethod());
 
-		Maybe<Route> route = router.getRoute(uri, method);
+		method.fmap(m -> {
+			Maybe<Route> route = router.getRoute(uri, m);
 
-		if (route.isNothing()) {
-			handleError(404, uri, baseRequest, request, response);
-			return;
-		}
+			if (route.isNothing()) {
+				try {
+					handleError(404, uri, baseRequest, request, response);
+				} catch (IOException ex) {
+					Logger.getLogger(EspressoHandler.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				return;
+			}
 
-		route.fmap(r -> {
-			executeHandler(r, uri, baseRequest, request, response);
+			route.fmap(r -> {
+				executeHandler(r, uri, baseRequest, request, response);
+			});
 		});
 	}
 

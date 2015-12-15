@@ -14,6 +14,8 @@ public class Router {
 
 	private final List<Route> routes = new ArrayList<>();
 
+	private final List<Route> actionRoutes = new ArrayList<>();
+	
 	private final HashMap<Integer, List<Route>> errorRoutes = new HashMap<>();
 
 	public Router() {
@@ -58,7 +60,11 @@ public class Router {
 	 * @param route
 	 */
 	public void setRoute(Route route) {
-		routes.add(route);
+		if (route.getMethod().equals(HttpMethod.ACTION)) {
+			actionRoutes.add(route);
+		} else {
+			routes.add(route);
+		}
 	}
 
 	public void setRoute(HttpMethod httpMethod, String path, Handler handler) {
@@ -91,18 +97,23 @@ public class Router {
 	 * @param method
 	 * @return
 	 */
-	public Maybe<Route> getRoute(String url, Maybe<HttpMethod> method) {
-		return method.fmap(m -> {
-			for (Route route : routes) {
-				if (route.getMethod().equals(HttpMethod.ACTION) || m.equals(route.getMethod())) {
-					if (route.matchRoute(url)) {
-						return route;
-					}
+	public Maybe<Route> getRoute(String url, HttpMethod method) {
+		for (Route route : routes) {
+			if (method.equals(route.getMethod())) {
+				if (route.matchRoute(url)) {
+					return new Maybe<>(route);
 				}
 			}
-
-			return null;
-		});
+		}
+		
+		//No specific route found...
+		for(Route route : actionRoutes) {
+			if (route.matchRoute(url)) {
+				return new Maybe<>(route);
+			}
+		}
+		
+		return new Maybe<>(null);
 	}
 
 	/**
